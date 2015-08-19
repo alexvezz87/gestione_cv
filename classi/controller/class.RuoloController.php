@@ -7,7 +7,7 @@
  */
 
 
-require_once '../DAO/class.RuoloDao.php';
+require_once '../DAO/class.RuoloDAO.php';
 
 /**
  * Description of class
@@ -18,7 +18,7 @@ class RuoloContoller {
     
     private $DAO;
     
-    function __construct() {
+    public function __construct() {
         $this->DAO = new RuoloDAO();
     }
     
@@ -28,7 +28,7 @@ class RuoloContoller {
      * @param type $categoria
      * @return boolean|array
      */
-    public function getRuoliByCategoria($categoria){
+    public function getRuoliByCategory($categoria){
         
         //interrogo il db
         $result = $this->DAO->getRuoliByCategoria($categoria);
@@ -48,10 +48,8 @@ class RuoloContoller {
                 }
                 
                 return $ruoli;
-            }
-            else{
-                return false;
-            }        
+            }            
+            return false;
     }
     
     /**
@@ -61,7 +59,7 @@ class RuoloContoller {
      * @param Ruolo $ruolo
      * @return boolean
      */
-    public function salvaRuolo(Ruolo $ruolo){
+    public function saveRuolo(Ruolo $ruolo){
         if($this->DAO->salvaRuolo($ruolo) == true){
             return true;
         }
@@ -74,9 +72,13 @@ class RuoloContoller {
      * @param Ruolo $ruolo
      * @return boolean
      */
-    public function cancellaRuolo(Ruolo $ruolo){
-        if($this->DAO->deleteRuolo($ruolo) == true){
-            return true;
+    public function deleteRuolo(Ruolo $ruolo){
+        //per eliminare un rulo prima ottengo il suo id
+        $idRuolo = $this->DAO->getIDRuolo($ruolo);
+        if($idRuolo != null && $idRuolo != false){
+            if($this->DAO->deleteRuolo($idRuolo) == true){
+                return true;
+            }
         }
         return false;
     }
@@ -100,6 +102,22 @@ class RuoloContoller {
         return false;
     }
     
+    /**
+     * La funzione dato un determinato ruolo lo aggiorna a database
+     * 
+     * @param Ruolo $ruolo
+     * @return boolean
+     */
+    public function updateRuolo(Ruolo $ruolo){
+        //per aggiornare il ruolo prima devo ottenere il suo id
+        $idRuolo = $this->DAO->getIDRuolo($ruolo);
+        if($idRuolo != null && $idRuolo != false){
+            if($this->DAO->updateRuolo($ruolo, $idRuolo) == true){
+                return true;
+            }
+        }
+        return false;
+    }   
     
 }
 

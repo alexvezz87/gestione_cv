@@ -6,6 +6,8 @@
  * and open the template in the editor.
  */
 
+require_once '../model/class.Ruolo.php';
+
 /**
  * Description of class
  *
@@ -42,12 +44,10 @@ class RuoloDAO {
     }
 
     /**
-     * 
      * La funzione permette di salvare un ruolo non esistente all'interno del database
      * 
      * @param Ruolo $ruolo
-     * @return boolean
-     * 
+     * @return boolean     
      */
     public function salvaRuolo(Ruolo $ruolo){
         try{
@@ -84,10 +84,7 @@ class RuoloDAO {
     public function isRuoloAlreadyInDB(Ruolo $ruolo){
         try{
             $result = $this->wpdb->get_var($this->wpdb-prepare(
-                        "SELECT ID 
-                         FROM ".$this->table."
-                         WHERE nome = %s  
-                         AND categoria = %d",
+                        "SELECT ID FROM ".$this->table." WHERE nome = %s AND categoria = %d",
                         addslashes($ruolo->getNome()),
                         addslashes($ruolo->getCategoria())                    
                     ));
@@ -127,12 +124,12 @@ class RuoloDAO {
      * @param Ruolo $ruolo
      * @return boolean
      */
-    public function deleteRuolo(Ruolo $ruolo){
+    public function deleteRuolo($idRuolo){
         try{
-            $this->wpdb->delete( $this->table, array( 'nome' => $ruolo->getNome(), 'categoria' => $ruolo->getCategoria() ) );
+            $this->wpdb->delete( $this->table, array( 'ID' => $idRuolo) );
             return true;
         } catch (Exception $ex) {
-             _e($ex);
+            _e($ex);
             return false;
         }
     }
@@ -155,6 +152,60 @@ class RuoloDAO {
             }
         }
         else{
+            return false;
+        }
+    }
+    
+    /**
+     * La funzione dato un ruolo restituisce il suo ID
+     * 
+     * @param Ruolo $ruolo
+     * @return boolean
+     */
+    public function getIDRuolo(Ruolo $ruolo){
+        try{
+            $result = $this->wpdb->get_var(
+                        $this->wpdb-prepare(
+                                    "SELECT ID FROM ".$this->table." WHERE nome = %s AND categoria = %d",
+                                    addslashes($ruolo->getNome()),
+                                    addslashes($ruolo->getCategoria())
+                                )
+                    );
+            if($result != null){
+                return stripslashes($result);
+            }
+            return false;
+            
+        } catch (Exception $ex) {
+            _e($ex);
+            return false;
+        }
+    }
+    
+    /**
+     * La funzione aggiorna un determinato ruolo nel database
+     * 
+     * @param Ruolo $ruolo
+     * @return boolean
+     */
+    public function updateRuolo(Ruolo $ruolo, $idRuolo){
+        try{
+            $this->wpdb->update(
+                    $this->table,
+                    array(
+                        'nome' => addslashes($ruolo->getNome()),
+                        'categoria' => addslashes($ruolo->getCategoria()),
+                        'pubblicato' => addslashes($ruolo->getPubblicato())
+                    ),
+                    array('ID' => $idRuolo),
+                    array('%s', '%d', '%d'),
+                    array('%d')
+            );
+            
+            return true;
+            
+        } catch (Exception $ex) {
+            _e($ex);
             return false;
         }
     }
