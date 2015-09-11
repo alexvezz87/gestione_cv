@@ -41,6 +41,7 @@ function print_insert_cv(){
     
     $printer = new WriterCV();
     
+    $printer->listenerCvForm();
     $printer->printInsertCvForm();    
 }
 

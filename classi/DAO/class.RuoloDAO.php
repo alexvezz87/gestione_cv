@@ -65,10 +65,11 @@ class RuoloDAO {
                     array('%s', '%d', '%d')
                 );
                 
-                return true;
+                //restituisco l'id della riga inserita
+                return $this->wpdb->insert_id;
                 
             }
-            return false;
+            return $this->getIDRuolo($ruolo);
             
         } catch (Exception $ex) {
             _e($ex);
@@ -83,7 +84,7 @@ class RuoloDAO {
      */
     public function isRuoloAlreadyInDB(Ruolo $ruolo){
         try{
-            $result = $this->wpdb->get_var($this->wpdb-prepare(
+            $result = $this->wpdb->get_var($this->wpdb->prepare(
                         "SELECT ID FROM ".$this->table." WHERE nome = %s AND categoria = %d",
                         addslashes($ruolo->getNome()),
                         addslashes($ruolo->getCategoria())                    
@@ -180,6 +181,20 @@ class RuoloDAO {
         }
     }
     
+    public function getRuoloByID($idRuolo){
+       
+        try{
+            $query = "SELECT * FROM ".$this->table." WHERE ID = ".$idRuolo;            
+            return $this->wpdb->get_row($query);
+        }
+        catch(Exception $ex){
+            _e($ex);
+            return false;
+        }
+        
+       
+    }
+    
     /**
      * La funzione dato un ruolo restituisce il suo ID
      * 
@@ -189,8 +204,28 @@ class RuoloDAO {
     public function getIDRuolo(Ruolo $ruolo){
         try{
             $result = $this->wpdb->get_var(
-                        $this->wpdb-prepare(
+                        $this->wpdb->prepare(
                                     "SELECT ID FROM ".$this->table." WHERE nome = %s AND categoria = %d",
+                                    addslashes($ruolo->getNome()),
+                                    addslashes($ruolo->getCategoria())
+                                )
+                    );
+            if($result != null){
+                return stripslashes($result);
+            }
+            return false;
+            
+        } catch (Exception $ex) {
+            _e($ex);
+            return false;
+        }
+    }
+    
+    public function getPubblicato(Ruolo $ruolo){
+        try{
+             $result = $this->wpdb->get_var(
+                        $this->wpdb->prepare(
+                                    "SELECT pubblicato FROM ".$this->table." WHERE nome = %s AND categoria = %d",
                                     addslashes($ruolo->getNome()),
                                     addslashes($ruolo->getCategoria())
                                 )

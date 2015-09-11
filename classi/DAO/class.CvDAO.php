@@ -54,7 +54,7 @@ class CvDAO {
             if($this->isCvAlreadyInDB($cv) == false){
                 //il cv non esiste
                 //imposto il timezone
-                date_default_timezone_set('UTC');
+                date_default_timezone_set('Europe/Rome');
                 $timestamp = date('Y-m-d H:i:s', strtotime("now")); 
                 $this->wpdb->insert(
                             $this->table,
@@ -72,6 +72,10 @@ class CvDAO {
                             ),
                             array('%s', '%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%d')
                         );
+                return true;
+            }
+            else{
+                return false;
             }
         } catch (Exception $ex) {
             _e($ex);

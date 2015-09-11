@@ -78,10 +78,7 @@ class RuoloContoller {
      * @return boolean
      */
     public function saveRuolo(Ruolo $ruolo){
-        if($this->DAO->salvaRuolo($ruolo) == true){
-            return true;
-        }
-        return false;
+       return $this->DAO->salvaRuolo($ruolo);        
     }
 
     /**
@@ -119,6 +116,7 @@ class RuoloContoller {
         }
         return false;
     }
+  
     
     /**
      * La funzione dato un determinato ruolo lo aggiorna a database
@@ -136,6 +134,22 @@ class RuoloContoller {
         }
         return false;
     }   
+    
+    public function isRuoloPubblicato($idRuolo){        
+            
+            $ruolo = $this->DAO->getRuoloByID($idRuolo);               
+           
+            if($ruolo->pubblicato == 1){
+                //ruolo pubblicato
+                return true;
+            }
+            else{
+                //ruolo non pubblicato
+                return false;
+            }
+        
+       
+    }
     
 }
 
