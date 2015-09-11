@@ -7,7 +7,7 @@
  */
 
 
-require_once '../DAO/class.RuoloDAO.php';
+//require_once '../DAO/class.RuoloDAO.php';
 
 /**
  * Description of class
@@ -28,23 +28,41 @@ class RuoloContoller {
      * @param type $categoria
      * @return boolean|array
      */
-    public function getRuoliByCategory($categoria){
+    public function getRuoliByCategory($categoria, $pubblicato){
         
         //interrogo il db
-        $result = $this->DAO->getRuoliByCategoria($categoria);
-        
+        $result = null;
+        if($pubblicato == null){
+            //ricerco tutti i ruoli
+            $result = $this->DAO->getRuoliByCategoria($categoria);
+        }
+        else if($pubblicato == 1){
+            //ricerco solo i ruoli pubblicati
+            $result = $this->DAO->getRuoliPubblicatiByCategoria($categoria);
+        }
+        else{
+            //ricerco solo i ruoli non pubblicati
+            $result = $this->DAO->getRuoliNonPubblicatiByCategoria($categoria);
+        }
         if(count($result) > 0){
                 $ruoli = array();
                 
                 //ciclo da verificare
                 foreach ($result as $value) {
                     //creo una nuova istanza di ruolo
-                    $ruolo = new Ruolo();
-                    $ruolo->setNome($value->nome);
-                    $ruolo->setCategoria($value->categoria);
-                    $ruolo->setPubblicato($value->pubblicato);
+                    
+                    $temp = array();
+                    $temp['id'] = $value->ID;
+                    $temp['nome'] = $value->nome;
+                    $temp['categoria'] = $value->categoria;
+                    $temp['pubblicato'] = $value->pubblicato;
+                    
+//                    $ruolo = new Ruolo();
+//                    $ruolo->setNome($value->nome);
+//                    $ruolo->setCategoria($value->categoria);
+//                    $ruolo->setPubblicato($value->pubblicato);
                     //salvo il ruolo in un array di ruoli
-                    array_push($ruoli, $ruolo);
+                    array_push($ruoli, $temp);
                 }
                 
                 return $ruoli;

@@ -60,8 +60,8 @@ function install_gestione_cv_DB(){
                  email VARCHAR(100) NOT NULL,
                  categoria INT,
                  ruolo INT,
-                 regione VARCHAR(100), 
-                 provincia VARCHAR(100),
+                 regione VARCHAR(2), 
+                 provincia VARCHAR(3),
                  cv TEXT NOT NULL,
                  pubblicato INT                 
                  );{$charset_collate}";

@@ -16,6 +16,7 @@ License: GPLv2 or later
 
 //includo le librerie
 require_once 'install_DB.php';
+require_once 'classi/classes.php';
 
 
 //creo il db al momento dell'attivazione
@@ -31,5 +32,16 @@ function remove_DB(){
     deInstall_gestione_cv_DB();
 }
 
+
+//inserisco gli shortcode
+
+//stampo la pagina di inserimento cv
+add_shortcode('printInsertCV', 'print_insert_cv');
+function print_insert_cv(){
+    
+    $printer = new WriterCV();
+    
+    $printer->printInsertCvForm();    
+}
 
 ?>

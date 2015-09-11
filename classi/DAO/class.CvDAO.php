@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-require_once '../model/class.CV.php';
+//require_once '../model/class.CV.php';
 
 /**
  * Description of class

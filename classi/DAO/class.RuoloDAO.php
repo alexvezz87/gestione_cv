@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-require_once '../model/class.Ruolo.php';
+//require_once '../model/class.Ruolo.php';
 
 /**
  * Description of class
@@ -110,6 +110,30 @@ class RuoloDAO {
         try{
             //preparo la query
             $query = "SELECT * FROM ".$this->table." WHERE categoria = ".$categoria;
+            return $this->wpdb->get_results($query); 
+            
+        } catch (Exception $ex) {
+            _e($ex);
+            return -1;
+        }
+    }
+    
+    public function getRuoliPubblicatiByCategoria($categoria){
+        try{
+            //preparo la query
+            $query = "SELECT * FROM ".$this->table." WHERE categoria = ".$categoria. " AND pubblicato = 1";
+            return $this->wpdb->get_results($query); 
+            
+        } catch (Exception $ex) {
+            _e($ex);
+            return -1;
+        }
+    }
+    
+    public function getRuoliNonPubblicatiByCategoria($categoria){
+        try{
+            //preparo la query
+            $query = "SELECT * FROM ".$this->table." WHERE categoria = ".$categoria. " AND pubblicato = 0";
             return $this->wpdb->get_results($query); 
             
         } catch (Exception $ex) {

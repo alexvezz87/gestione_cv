@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-require_once '../DAO/class.CvDAO.php';
+//require_once '../DAO/class.CvDAO.php';
 /**
  * Description of class
  *
@@ -56,6 +56,17 @@ class CvController {
         return $this->getCVsArray($result); 
     }
     
+    public function getCVsByParameters($param){
+        $result = $this->DAO->getCVsByParameters($param);
+        return $this->getCVsArray($result);
+    }
+    
+    /**
+     * Funzione interna che dato in ingresso un oggetto query, restituisce un array di cv
+     * 
+     * @param type $result
+     * @return boolean|array
+     */
     function getCVsArray($result){
          if(count($result) > 0){
             $cvs = array();
@@ -78,6 +89,23 @@ class CvController {
             }
             
             return $cvs;
+        }
+        return false;
+    }
+    
+    /**
+     * La funzione dato un determinato cv, lo aggiorna a database
+     * 
+     * @param CV $cv
+     * @return boolean
+     */
+    public function updateCV(CV $cv){
+        //per aggiornare un cv, devo prima ottenere il suo id
+        $idCV = $this->DAO->getCvID($cv);
+        if($idCV != null && $idCV != false){
+            if($this->DAO->updateCV($cv, $idCV) == true){
+                return true;
+            }
         }
         return false;
     }
