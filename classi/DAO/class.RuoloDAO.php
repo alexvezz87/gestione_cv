@@ -53,23 +53,20 @@ class RuoloDAO {
         try{
             //prima di salvare controllo se il ruolo è già presente          
             
-            if($this->isRuoloAlreadyInDB($ruolo) == false ){
-                //il ruolo non esiste
-                $this->wpdb->insert(
-                    $this->table,
-                    array(
-                        'nome' => addslashes($ruolo->getNome()),
-                        'categoria' => addslashes($ruolo->getCategoria()),
-                        'pubblicato' => addslashes($ruolo->getPubblicato())
-                    ),
-                    array('%s', '%d', '%d')
-                );
-                
-                //restituisco l'id della riga inserita
-                return $this->wpdb->insert_id;
-                
-            }
-            return $this->getIDRuolo($ruolo);
+            //il ruolo non esiste
+            $this->wpdb->insert(
+                $this->table,
+                array(
+                    'nome' => addslashes($ruolo->getNome()),
+                    'categoria' => addslashes($ruolo->getCategoria()),
+                    'pubblicato' => addslashes($ruolo->getPubblicato())
+                ),
+                array('%s', '%d', '%d')
+            );
+
+            //restituisco l'id della riga inserita
+            return $this->wpdb->insert_id;                
+           
             
         } catch (Exception $ex) {
             _e($ex);
@@ -142,6 +139,31 @@ class RuoloDAO {
             return -1;
         }
     }
+    
+    public function getRuoliNonPubblicati(){
+        try{
+            //preparo la query
+            $query = "SELECT * FROM ".$this->table." WHERE pubblicato = 0";
+            return $this->wpdb->get_results($query); 
+            
+        } catch (Exception $ex) {
+            _e($ex);
+            return -1;
+        }
+    }
+    
+    public function getUltimiRuoliApprovati(){
+        try{
+            //preparo la query
+            $query = "SELECT * FROM ".$this->table." WHERE pubblicato = 1 ORDER BY ID DESC LIMIT 10";
+            return $this->wpdb->get_results($query); 
+            
+        } catch (Exception $ex) {
+            _e($ex);
+            return -1;
+        }
+    }
+    
     
     /**
      * Funzione che elimina un deterimanto ruolo dal database

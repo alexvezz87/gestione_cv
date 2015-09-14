@@ -18,6 +18,9 @@ License: GPLv2 or later
 require_once 'install_DB.php';
 require_once 'classi/classes.php';
 
+//indico la cartella dove è contenuto il plugin
+require_once (dirname(__FILE__) . '/gestione_cv.php');
+
 
 //creo il db al momento dell'attivazione
 register_activation_hook(__FILE__,'install_DB');
@@ -44,5 +47,22 @@ function print_insert_cv(){
     $printer->listenerCvForm();
     $printer->printInsertCvForm();    
 }
+
+
+//Aggiungo il menu
+function add_admin_menu(){
+    add_menu_page('Gestione CV', 'Gestione CV', 'administrator', 'gestione_cv', 'add_admin_page', plugins_url('images/icona_20x28.png', __FILE__), 9);
+    add_submenu_page('gestione_cv', 'Gestione Ruoli', 'Gestione Ruoli', 'administrator', 'gestione_ruoli', 'add_pagina_gestione_ruoli');
+}
+
+function add_admin_page(){
+    echo 'ciao admin';
+}
+
+function add_pagina_gestione_ruoli(){
+    include 'menu_pages/gestione_ruoli.php';
+}
+
+add_action('admin_menu', 'add_admin_menu');
 
 ?>

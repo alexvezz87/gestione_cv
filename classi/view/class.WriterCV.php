@@ -94,6 +94,35 @@ class WriterCV {
     } 
     
     
+    public function listenerInsertRuolo(){
+        if(isset($_POST['inserisci-ruolo'])){
+            //entrambi i field devono essere presenti
+            if(isset($_POST['categoria']) && isset($_POST['ruolo']) && trim($_POST['ruolo'])!= ''){
+                
+                //creo l'istanza di ruolo
+                $ruolo = new Ruolo();
+                $ruolo->setCategoria($_POST['categoria']);
+                $ruolo->setNome(trim($_POST['ruolo']));
+                $ruolo->setPubblicato(1);
+                
+                //lo salvo nel db
+                if($this->ruoloController->saveRuoloAdmin($ruolo) != false){
+                    echo '<div class="ok">Ruolo salvato con successo!</div>';
+                }
+                else{
+                    echo '<div class="ko">Il ruolo '.$ruolo->getNome().' è già presente nel sistema.</div>';
+                }
+                
+            }
+            else{
+                echo '<div class="ko">Inserimento non avvenuto. Specificare entrambi i campi</div>';
+            }
+        }
+    }
+    
+    /**
+     * Funzione che ascolta il form di inserimento Curriculum
+     */
     public function listenerCvForm(){
         
         //se è stato inviato un cv attivo l'ascoltatore
@@ -352,5 +381,130 @@ class WriterCV {
 <?php
     }
 
+    public function listenerAdminRuoli(){
+        
+        if(isset($_POST['approva-ruolo'])){
+            $idRuolo = $_POST['idRuolo'];
+            $ruolo = new Ruolo();
+            $ruolo = $this->ruoloController->getRuoloById($idRuolo);
+            if($ruolo != null){
+                $ruolo->setPubblicato(1);
+                //aggiorno il ruolo
+                if($this->ruoloController->updateRuolo($ruolo, $idRuolo)){
+                    echo '<div class="ok">Il ruolo '.$ruolo->getNome().' è stato pubblicato.</div>';
+                }
+                else{
+                    echo '<div class="ko">Errore nel pubblicare il ruolo '.$ruolo->getNome().'</div>';
+                }                
+            }
+            unset($_POST['idRuolo']);
+        }
+        
+        if(isset($_POST['elimina-ruolo'])){
+            $idRuolo = $_POST['idRuolo'];
+            if($this->ruoloController->deleteRuolo($idRuolo)){
+                echo '<div class="ok">Ruolo cancellato con successo!</div>';
+            }
+            else{
+                echo '<div class="ko">Errore nella cancellazione del ruolo.</div>';
+            }
+            
+            unset($_POST['idRuolo']);
+        }
+        
+    }
+        
+    function printStatoRuolo($ruolo){
+        if($ruolo->pubblicato == 1){
+            return 'Pubblicato';
+        }
+        else if($ruolo->pubblicato == 0){
+            return '<form action="'.curPageURL().'" method="POST" class="container-approva"><input type="hidden" name="idRuolo" value="'.$ruolo->ID.'"/><input type="submit" name="approva-ruolo" value="Approva"></form>';
+        }
+    }
+    
+    /**
+     * La funzione stampa la tabella dei ruoli a seconda dei ruoli forniti
+     * 
+     * @param type $ruoli
+     */
+    public function printRuoli($ruoli){
+        //considero ruoli un array di ruoli
+        if(count($ruoli) > 0){
+?>        
+        <table class="table-ruoli">
+            <thead>
+                <tr>
+                    <td>Ruolo</td>
+                    <td>Categoria</td>
+                    <td>Stato</td>
+                    <td>Azione</td>
+                </tr>                
+            </thead>
+            <tbody>
+<?php
+            foreach($ruoli as $ruolo){
+                             
+?>
+                <tr>
+                    <td><input type="text" name="nome-ruolo-<?php echo $ruolo->ID ?>" value="<?php echo $ruolo->nome ?>" disabled/></td>
+                    <td><?php echo getCategoriaById($ruolo->categoria) ?></td>
+                    <td><?php echo $this->printStatoRuolo($ruolo) ?></td>
+                    <td>
+                        <form action="<?php echo curPageURL() ?>" method="POST"  class="azione-ruolo">
+                            <input type="hidden" name="idRuolo" value="<?php echo $ruolo->ID ?>" />
+                            <input type="hidden" name="tempNomeRuolo" value="<?php echo $ruolo->nome ?>" />
+                            <input type="button" name="modifica-ruolo" value="Modifica">
+                            <input style="display:none" type="submit" name="aggiorna-ruolo" value="Aggiorna">
+                            <input type="submit" name="elimina-ruolo" value="Elimina">
+                        </form>
+                    </td>
+                </tr>
+<?php
+                
+            }
+?>
+            </tbody>
+            
+        </table>
+<?php    
+        }
+        else{
+            echo 'Non ci sono ruoli per questa voce';
+        }
+    }     
+    
+    public function listenerFormRuoli(){
+?>
+        <script type="text/javascript">
+            jQuery(document).ready(function($){
+                $('.azione-ruolo input[name=modifica-ruolo]').click(function(){
+                   var idRuolo = $(this).siblings('input[name=idRuolo]').val();                   
+                   $(this).siblings('input[name=aggiorna-ruolo]').show();
+                   $(this).hide();
+                   $('input[name=nome-ruolo-'+idRuolo+']').removeAttr('disabled');
+                });
+                
+                
+                $('input[name=aggiorna-ruolo]').click(function(){
+                    var idRuolo = $(this).siblings('input[name=idRuolo]').val(); 
+                    var nome = $('input[name=nome-ruolo-'+idRuolo+']').val();
+                    $(this).siblings('input[name=tempNomeRuolo]').val(nome);
+                    alert($(this).siblings('input[name=tempNomeRuolo]').val());
+                    
+                });
+            });
+        </script>
+<?php        
+    }
+    
+    
+    public function printRuoliNonPubblicati(){
+        $this->printRuoli($this->ruoloController->getRuoliNonPubblicati());
+    }
+    
+    public function printUltimiRuoliApprovati(){
+        $this->printRuoli($this->ruoloController->getUltimiRuoliApprovati());
+    }
     
 }

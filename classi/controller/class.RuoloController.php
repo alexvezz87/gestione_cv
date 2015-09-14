@@ -78,7 +78,29 @@ class RuoloContoller {
      * @return boolean
      */
     public function saveRuolo(Ruolo $ruolo){
-       return $this->DAO->salvaRuolo($ruolo);        
+       
+        if($this->DAO->isRuoloAlreadyInDB($ruolo) == false){
+            return $this->DAO->salvaRuolo($ruolo);   
+        }
+        
+        return $this->DAO->getIDRuolo($ruolo);      
+    }
+    
+    /**
+     * Funzione usata dagli amministratori per salvare un ruolo nel database
+     * serve per differenziarsi da quella usata dagli utenti nel caso il ruolo esista già
+     * in quel caso viene ritornato false
+     * 
+     * @param Ruolo $ruolo
+     * @return boolean
+     */
+    public function saveRuoloAdmin(Ruolo $ruolo){
+        
+        if($this->DAO->isRuoloAlreadyInDB($ruolo) == false){
+            return $this->DAO->salvaRuolo($ruolo);   
+        }
+        //il ruolo esiste già
+        return false;      
     }
 
     /**
@@ -87,15 +109,14 @@ class RuoloContoller {
      * @param Ruolo $ruolo
      * @return boolean
      */
-    public function deleteRuolo(Ruolo $ruolo){
-        //per eliminare un rulo prima ottengo il suo id
-        $idRuolo = $this->DAO->getIDRuolo($ruolo);
-        if($idRuolo != null && $idRuolo != false){
-            if($this->DAO->deleteRuolo($idRuolo) == true){
-                return true;
-            }
+    public function deleteRuolo($idRuolo){
+        //per eliminare un rulo prima ottengo il suo id        
+        
+        if($this->DAO->deleteRuolo($idRuolo) == true){
+            return true;
         }
         return false;
+      
     }
     
     /**
@@ -124,31 +145,45 @@ class RuoloContoller {
      * @param Ruolo $ruolo
      * @return boolean
      */
-    public function updateRuolo(Ruolo $ruolo){
-        //per aggiornare il ruolo prima devo ottenere il suo id
-        $idRuolo = $this->DAO->getIDRuolo($ruolo);
-        if($idRuolo != null && $idRuolo != false){
-            if($this->DAO->updateRuolo($ruolo, $idRuolo) == true){
-                return true;
-            }
+    public function updateRuolo(Ruolo $ruolo, $idRuolo){
+        if($this->DAO->updateRuolo($ruolo, $idRuolo) == true){
+            return true;
         }
-        return false;
-    }   
+    } 
+    
+    
+    public function getRuoloById($idRuolo){
+        $temp = $this->DAO->getRuoloByID($idRuolo);
+        if($temp != null){
+            $ruolo = new Ruolo();
+            $ruolo->setCategoria($temp->categoria);
+            $ruolo->setPubblicato($temp->pubblicato);
+            $ruolo->setNome($temp->nome);
+            return $ruolo;
+        }
+        return null;
+    }
     
     public function isRuoloPubblicato($idRuolo){        
             
-            $ruolo = $this->DAO->getRuoloByID($idRuolo);               
-           
-            if($ruolo->pubblicato == 1){
-                //ruolo pubblicato
-                return true;
-            }
-            else{
-                //ruolo non pubblicato
-                return false;
-            }
-        
-       
+        $ruolo = $this->DAO->getRuoloByID($idRuolo);               
+
+        if($ruolo->pubblicato == 1){
+            //ruolo pubblicato
+            return true;
+        }
+        else{
+            //ruolo non pubblicato
+            return false;
+        }
+    }
+    
+    public function getRuoliNonPubblicati(){
+        return $this->DAO->getRuoliNonPubblicati();
+    }
+    
+    public function getUltimiRuoliApprovati(){
+        return $this->DAO->getUltimiRuoliApprovati();
     }
     
 }
