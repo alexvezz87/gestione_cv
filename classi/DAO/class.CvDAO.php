@@ -49,40 +49,35 @@ class CvDAO {
      * @return type
      */
     public function saveCV(CV $cv){
-        try{
+        try{         
+                        
+            //imposto il timezone
+            date_default_timezone_set('Europe/Rome');
+            $timestamp = date('Y-m-d H:i:s', strtotime("now")); 
+            $this->wpdb->insert(
+                        $this->table,
+                        array(
+                            'data_inserimento' => $timestamp,
+                            'nome' => $cv->getNome(),
+                            'cognome' => $cv->getCognome(),
+                            'email' => $cv->getEmail(),
+                            'categoria' => $cv->getCategoria(),
+                            'ruolo' => $cv->getRuolo(),
+                            'regione' => $cv->getRegione(),
+                            'provincia' => $cv->getProvincia(),
+                            'cv' => $cv->getCv(),
+                            'pubblicato' => $cv->getPubblicato()
+                        ),
+                        array('%s', '%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%d')
+                    );
+            return true;
            
-            if($this->isCvAlreadyInDB($cv) == false){
-                //il cv non esiste
-                //imposto il timezone
-                date_default_timezone_set('Europe/Rome');
-                $timestamp = date('Y-m-d H:i:s', strtotime("now")); 
-                $this->wpdb->insert(
-                            $this->table,
-                            array(
-                                'data_inserimento' => $timestamp,
-                                'nome' => $cv->getNome(),
-                                'cognome' => $cv->getCognome(),
-                                'email' => $cv->getEmail(),
-                                'categoria' => $cv->getCategoria(),
-                                'ruolo' => $cv->getRuolo(),
-                                'regione' => $cv->getRegione(),
-                                'provincia' => $cv->getProvincia(),
-                                'cv' => $cv->getCv(),
-                                'pubblicato' => $cv->getPubblicato()
-                            ),
-                            array('%s', '%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%d')
-                        );
-                return true;
-            }
-            else{
-                return false;
-            }
         } catch (Exception $ex) {
             _e($ex);
             return -1;
         }
     }
-    
+ 
     /**
      * La funzione controlla se un cv passato esiste già nel database
      * 
@@ -201,22 +196,28 @@ class CvDAO {
      */
     public function updateCV(CV $cv, $idCV){
         try{
+            
+            //imposto il timezone
+            date_default_timezone_set('Europe/Rome');
+            $timestamp = date('Y-m-d H:i:s', strtotime("now")); 
+            
             $this->wpdb->update(
                         $this->table,
                         array(
+                            'data_inserimento' => $timestamp,
                             'nome' => addslashes($cv->getNome()),
                             'cognome' => addslashes($cv->getCognome()),
-                            'email' => addslashes($cv->getEmail()),
-                            'categoria' => addslashes($cv->getCategoria()),
                             'ruolo' => addslashes($cv->getRuolo()),
                             'regione' => addslashes($cv->getRegione()),
                             'provincia' => addslashes($cv->getProvincia()),
-                            'pubblicato' => addslashes($cv->getPubblicato())
+                            'cv' => addslashes($cv->getCv())
                         ),
                         array('ID' => $idCV),
-                        array('%s', '%s', '%s', '%d', '%d', '%s', '%s', '%d'),
+                        array('%s', '%s', '%s', '%d', '%s', '%s', '%s'),
                         array('%d')
                     );
+            return true;
+            
         } catch (Exception $ex) {
             _e($ex);
             return false;

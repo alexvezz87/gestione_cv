@@ -26,8 +26,19 @@ class CvController {
      * @return boolean
      */
     public function saveCV(CV $cv){
-        if($this->DAO->saveCV($cv) == true){
-            return true;
+        
+        if($this->DAO->isCvAlreadyInDB($cv) == false){
+            //se il cv non è presente, lo salvo
+            if($this->DAO->saveCV($cv) == true){
+                return 1;
+            }
+        }
+        else{
+            //altrimenti faccio l'update
+            $idCV = $this->DAO->getCvID($cv);
+            if($this->DAO->updateCV($cv, $idCV)){
+                return 2;
+            }
         }
         return false;
     }

@@ -50,24 +50,24 @@ class WriterCV {
     
     function checkData($data){
         if(!(isset($data['nome']) && $data['nome'] != null && trim($data['nome']) != '')){               
-            echo 'check nome: NON valido<br>';
+            $_SESSION['errorEntry']='Nome inserito non valido';
             return false;
         }
 
         if(!(isset($data['cognome']) && $data['cognome'] != null && trim($data['cognome']) != '')){                
-            echo 'check cognome: NON valido<br>';
+            $_SESSION['errorEntry']='Cognome inserito non valido';
             return false;
         }
 
         if(!(isset($data['email']) && $data['email'] != null && $data['email'] != '' && filter_var($data['email'], FILTER_VALIDATE_EMAIL) )){
             $check_1 = false;
-           echo 'check NON email: valido<br>';
-           return false;
+            $_SESSION['errorEntry']='Email inserita non valida';
+            return false;
         }
         if(!(isset($_FILES['carica-cv']) && $_FILES['carica-cv'] != null && $_FILES['carica-cv']['error']) == 0){
             $check_1 = false;
-            print_r($_FILES['carica-cv']);
-            echo '<br>check CV: NON valido<br>';
+            //print_r($_FILES['carica-cv']);
+            $_SESSION['errorEntry']='File caricato non valido';
             return false;
         }
         
@@ -163,22 +163,27 @@ class WriterCV {
                     }
                     
                     //salvo il cv nel db
-                    if($this->cvController->saveCV($cv)){
-                        echo '<br>CV salvato!';
+                    $valueSaveCV = $this->cvController->saveCV($cv);
+                    if($valueSaveCV == 1){
+                        echo '<div class="ok">Il Curriculum è stato caricato correttamente nel sistema!</div>';
+                    }
+                    else if($valueSaveCV == 2) {
+                        echo '<div class="ok">Il Curriculum per la categoria occupazionale indicata è già presente nel sistema. Abbiamo provveduto ad aggiornare con l\'ultimo Curriculum fornito.</div>';
                     }
                     else{
-                        echo '<br>CV già presente nel DB!';
+                        echo '<div class="ko">Sono sopraggiunti errori nel caricare il Curriculum nel sistema.</div>';
                     }
                     
                     
                 }
-                
-                
-                
                
             }
             else{
-                echo 'KO!';
+                echo '<div class="ko">Abbiamo riscontrato un errore nel caricamento per il seguente motivo:';
+                if(isset($_SESSION['errorEntry'])){
+                    echo $_SESSION['errorEntry'];
+                }
+                echo '</div>';
             }            
             
         }
