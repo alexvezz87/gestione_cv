@@ -30,7 +30,7 @@ function install_DB(){
 
 
 //rimuovo il db quando disattivo il plugin
- register_deactivation_hook( __FILE__, 'remove_DB');
+register_deactivation_hook( __FILE__, 'remove_DB');
 function remove_DB(){
     deInstall_gestione_cv_DB();
 }
@@ -56,7 +56,7 @@ function add_admin_menu(){
 }
 
 function add_admin_page(){
-    echo 'ciao admin';
+    include 'menu_pages/gestione_curriculum.php';
 }
 
 function add_pagina_gestione_ruoli(){

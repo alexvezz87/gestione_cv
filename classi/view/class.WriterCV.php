@@ -92,33 +92,7 @@ class WriterCV {
         }
         return false;
     } 
-    
-    
-    public function listenerInsertRuolo(){
-        if(isset($_POST['inserisci-ruolo'])){
-            //entrambi i field devono essere presenti
-            if(isset($_POST['categoria']) && isset($_POST['ruolo']) && trim($_POST['ruolo'])!= ''){
-                
-                //creo l'istanza di ruolo
-                $ruolo = new Ruolo();
-                $ruolo->setCategoria($_POST['categoria']);
-                $ruolo->setNome(trim($_POST['ruolo']));
-                $ruolo->setPubblicato(1);
-                
-                //lo salvo nel db
-                if($this->ruoloController->saveRuoloAdmin($ruolo) != false){
-                    echo '<div class="ok">Ruolo salvato con successo!</div>';
-                }
-                else{
-                    echo '<div class="ko">Il ruolo '.$ruolo->getNome().' è già presente nel sistema.</div>';
-                }
-                
-            }
-            else{
-                echo '<div class="ko">Inserimento non avvenuto. Specificare entrambi i campi</div>';
-            }
-        }
-    }
+      
     
     /**
      * Funzione che ascolta il form di inserimento Curriculum
@@ -381,8 +355,34 @@ class WriterCV {
 <?php
     }
 
-    public function listenerAdminRuoli(){
+    public function listenerAdminRuoli(){        
         
+        //Listener di inserisci ruolo
+        if(isset($_POST['inserisci-ruolo'])){
+            //entrambi i field devono essere presenti
+            if(isset($_POST['categoria']) && isset($_POST['ruolo']) && trim($_POST['ruolo'])!= ''){
+                
+                //creo l'istanza di ruolo
+                $ruolo = new Ruolo();
+                $ruolo->setCategoria($_POST['categoria']);
+                $ruolo->setNome(trim($_POST['ruolo']));
+                $ruolo->setPubblicato(1);
+                
+                //lo salvo nel db
+                if($this->ruoloController->saveRuoloAdmin($ruolo) != false){
+                    echo '<div class="ok">Ruolo salvato con successo!</div>';
+                }
+                else{
+                    echo '<div class="ko">Il ruolo '.$ruolo->getNome().' è già presente nel sistema.</div>';
+                }
+                
+            }
+            else{
+                echo '<div class="ko">Inserimento non avvenuto. Specificare entrambi i campi</div>';
+            }
+        }        
+        
+        //Listener di approva ruolo
         if(isset($_POST['approva-ruolo'])){
             $idRuolo = $_POST['idRuolo'];
             $ruolo = new Ruolo();
@@ -400,6 +400,7 @@ class WriterCV {
             unset($_POST['idRuolo']);
         }
         
+        //Listner di elimina ruolo
         if(isset($_POST['elimina-ruolo'])){
             $idRuolo = $_POST['idRuolo'];
             if($this->ruoloController->deleteRuolo($idRuolo)){
@@ -412,6 +413,19 @@ class WriterCV {
             unset($_POST['idRuolo']);
         }
         
+        //Listener di aggiorne ruolo
+        if(isset($_POST['aggiorna-ruolo'])){            
+            $ruolo = new Ruolo();
+            $ruolo->setNome($_POST['tempNomeRuolo']);
+            //aggiorno
+            if($this->ruoloController->updateRuolo($ruolo, $_POST['idRuolo'])){
+                echo '<div class="ok">Ruolo aggiornato correttamente!</div>';
+            }
+            else{
+                echo '<div class="ko">Errore nell\'aggiornamento del ruolo.</div>';
+            }
+        }
+        
     }
         
     function printStatoRuolo($ruolo){
@@ -420,6 +434,59 @@ class WriterCV {
         }
         else if($ruolo->pubblicato == 0){
             return '<form action="'.curPageURL().'" method="POST" class="container-approva"><input type="hidden" name="idRuolo" value="'.$ruolo->ID.'"/><input type="submit" name="approva-ruolo" value="Approva"></form>';
+        }
+    }
+    
+    
+    public function printCVs($cvs){
+        if(count($cvs) > 0){
+?>
+        <table class="table-cvs">
+            <thead>
+                <tr>
+                    <td>Data inserimento</td>
+                    <td>Cognome</td>
+                    <td>Nome</td>
+                    <td>Email</td>
+                    <td>Categoria</td>
+                    <td>Ruolo</td>
+                    <td>Dove</td>
+                    <td>CV</td>
+                    <td>Stato</td>
+                    <td>Azioni</td>
+                </tr>
+            </thead>
+            <tbody>
+<?php
+            foreach($cvs as $cv){
+?>
+                <tr>
+                    <td><?php echo $cv->data_inserimento; ?></td>
+                    <td><?php echo $cv->cognome ?></td>
+                    <td><?php echo $cv->nome ?></td>
+                    <td><?php echo $cv->email ?></td>
+                    <td><?php echo $cv->categoria ?></td>
+                    <td><?php echo $cv->ruolo ?></td>
+                    <td><?php echo $cv->regione.' '.$cv->provincia ?></td>
+                    <td><?php echo $cv->cv ?></td>
+                    <td><?php echo $cv->pubblicato ?></td>
+                    <td>
+                        <form action="<?php echo curPageURL() ?>" name="modifica-cv" method="POST">
+                            <input type="hidden" name="idCV" value="<?php echo $cv->ID ?>" />                        
+                            <input type="button" name="modifica-cv" value="Modifica">
+                            <input style="display:none" type="submit" name="aggiorna-cv" value="Aggiorna">
+                            <input type="submit" name="elimina-cv" value="Elimina">
+                        </form>
+                </tr>
+<?php
+            }
+?>
+            </tbody>
+        </table>
+<?php
+        }
+        else{
+            echo 'Non ci sono curriculum per questa voce';
         }
     }
     
@@ -464,8 +531,7 @@ class WriterCV {
                 
             }
 ?>
-            </tbody>
-            
+            </tbody>            
         </table>
 <?php    
         }
@@ -489,8 +555,7 @@ class WriterCV {
                 $('input[name=aggiorna-ruolo]').click(function(){
                     var idRuolo = $(this).siblings('input[name=idRuolo]').val(); 
                     var nome = $('input[name=nome-ruolo-'+idRuolo+']').val();
-                    $(this).siblings('input[name=tempNomeRuolo]').val(nome);
-                    alert($(this).siblings('input[name=tempNomeRuolo]').val());
+                    $(this).siblings('input[name=tempNomeRuolo]').val(nome);                 
                     
                 });
             });
@@ -498,6 +563,9 @@ class WriterCV {
 <?php        
     }
     
+    public function printCVsNonPubblicati(){
+        $this->printCVs($this->cvController->getCVsNonPubblicati());
+    }
     
     public function printRuoliNonPubblicati(){
         $this->printRuoli($this->ruoloController->getRuoliNonPubblicati());
@@ -505,6 +573,29 @@ class WriterCV {
     
     public function printUltimiRuoliApprovati(){
         $this->printRuoli($this->ruoloController->getUltimiRuoliApprovati());
+    }
+    
+    public function listenerSearchRuoli(){
+        //su questa funzione è posto l'ascoltatore della ricerca
+        if(isset($_POST['ricerca-ruolo'])){         
+            
+            
+            $fields = array();
+                        
+            if(isset($_POST['nome-ruolo'])){
+                $fields['nome'] = strip_tags(trim($_POST['nome-ruolo']));
+            }
+            if(isset($_POST['ricerca-categoria'])){
+                $fields['categoria'] = $_POST['ricerca-categoria'];
+            }
+            if(isset($_POST['ricerca-stato'])){
+                $fields['pubblicato'] = $_POST['ricerca-stato'];
+            }
+            
+            $this->printRuoli($this->ruoloController->searchRuoli($fields));
+        }
+                
+        
     }
     
 }

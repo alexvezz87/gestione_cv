@@ -187,6 +187,19 @@ class CvDAO {
         }
     }
     
+    public function getCVsNonPubblicati(){
+        try{
+            //preparo la query
+            $query = "SELECT * FROM ".$this->table." WHERE pubblicato = 0";
+            return $this->wpdb->get_results($query);     
+            
+        } catch (Exception $ex) {
+            _e($ex);
+            return -1;
+        }
+    }
+    
+    
     /**
      * La funzione aggiorna i campi di un cv esistente riconosciuto tramite l'ID
      * 

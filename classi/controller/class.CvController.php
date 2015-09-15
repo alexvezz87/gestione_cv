@@ -120,6 +120,10 @@ class CvController {
         }
         return false;
     }
+    
+    public function getCVsNonPubblicati(){
+        return $this->DAO->getCVsNonPubblicati();
+    }
 }
 
 
