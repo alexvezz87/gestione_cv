@@ -146,9 +146,20 @@ class RuoloContoller {
      * @return boolean
      */
     public function updateRuolo(Ruolo $ruolo, $idRuolo){
+        
+        //ottengo il ruolo dall'id
+        $temp = $this->DAO->getRuoloByID($idRuolo);
+        
+        //il ruolo che andrò ad aggiornare avrà come unico campo modificabile il nome
+        //per questo prendo categoria e pubblicato dalla query fatta a db
+        $ruolo->setCategoria($temp->categoria);
+        $ruolo->setPubblicato($temp->pubblicato);
+        
         if($this->DAO->updateRuolo($ruolo, $idRuolo) == true){
             return true;
         }
+        
+        return false;
     } 
     
     
@@ -186,6 +197,9 @@ class RuoloContoller {
         return $this->DAO->getUltimiRuoliApprovati();
     }
     
+    public function searchRuoli($fields){       
+        return $this->DAO->searchRuoli($fields);
+    }
 }
 
 ?>

@@ -164,6 +164,29 @@ class RuoloDAO {
         }
     }
     
+    public function searchRuoli($fields){
+        try{
+            //preparo la query
+            $query = "SELECT * FROM ".$this->table." WHERE 1 = 1";
+            if(isset($fields['nome']) && $fields['nome'] != ''){
+                $query .= " AND nome LIKE '%".$fields['nome']."%'";
+            }
+            if(isset($fields['categoria']) && $fields['categoria'] != ''){
+                $query .= " AND categoria = ".$fields['categoria'];
+            }
+            if(isset($fields['pubblicato']) && $fields['pubblicato'] != -1){
+                $query .= " AND pubblicato = ".$fields['pubblicato'];
+            }
+            
+            return $this->wpdb->get_results($query); 
+            
+            
+        } catch (Exception $ex) {
+            _e($ex);
+            return -1;
+        }
+    }
+    
     
     /**
      * Funzione che elimina un deterimanto ruolo dal database
