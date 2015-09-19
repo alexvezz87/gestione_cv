@@ -237,10 +237,8 @@ class WriterCV {
         $this->printAjaxCallRegioniProvince();
         $this->printAjaxCallRuoli();        
    
-    }    
-    
+    }      
   
-       
     function printRegioniProvince(){
         
         $html = 'Dove cerchi occupazione ?'
@@ -269,12 +267,17 @@ class WriterCV {
 ?>
         <script type="text/javascript">
             jQuery(document).ready(function(){
-                var idCat = jQuery('#select-categoria').val();
+                var idCat = jQuery('select[name=categoria], select[name=ricerca-categoria]').val();
                 jQuery.post('<?php echo plugins_url().'/gestione_cv/ajax/ajax_call.php' ?>', {id_categoria: idCat}, printRuoli, 'json');
                 
     
-                jQuery(document).on('change', '#select-categoria',function(){
-                    idCat = jQuery('#select-categoria').val();                    
+                jQuery(document).on('change', 'select[name=categoria]',function(){
+                    idCat = jQuery('select[name=categoria]').val();                    
+                    jQuery.post('<?php echo plugins_url().'/gestione_cv/ajax/ajax_call.php' ?>', {id_categoria: idCat}, printRuoli, 'json');
+                });
+                
+                jQuery(document).on('change', 'select[name=ricerca-categoria]',function(){
+                    idCat = jQuery('select[name=ricerca-categoria]').val();                    
                     jQuery.post('<?php echo plugins_url().'/gestione_cv/ajax/ajax_call.php' ?>', {id_categoria: idCat}, printRuoli, 'json');
                 });
                 
@@ -355,6 +358,39 @@ class WriterCV {
 <?php
     }
 
+    public function listenerAdminCV(){
+        //Listener di approva cv
+        if(isset($_POST['approva-cv'])){
+            $idCV = $_POST['idCV'];
+            $cv = new CV();
+            $cv = $this->cvController->getCvById($idCV);           
+            if($cv != null){
+                $cv->setPubblicato(1);       
+                //aggiorno il ruolo
+                if($this->cvController->updateCV($cv, $idCV)){
+                    echo '<div class="ok">Il cv è stato pubblicato.</div>';
+                }
+                else{
+                    echo '<div class="ko">Errore nel pubblicare il cv </div>';
+                }                
+            }
+            unset($_POST['idCV']);
+        }
+        
+         //Listner di elimina cv
+        if(isset($_POST['elimina-cv'])){
+            $idCV = $_POST['idCV'];            
+            if($this->cvController->deleteCV($idCV)){
+                echo '<div class="ok">Curriculum cancellato con successo!</div>';
+            }
+            else{
+                echo '<div class="ko">Errore nella cancellazione del curriculum.</div>';
+            }
+            
+            unset($_POST['idCV']);
+        }
+    }
+    
     public function listenerAdminRuoli(){        
         
         //Listener di inserisci ruolo
@@ -414,8 +450,9 @@ class WriterCV {
         }
         
         //Listener di aggiorne ruolo
-        if(isset($_POST['aggiorna-ruolo'])){            
+        if(isset($_POST['aggiorna-ruolo'])){         
             $ruolo = new Ruolo();
+            $ruolo = $this->ruoloController->getRuoloById($_POST['idRuolo']); 
             $ruolo->setNome($_POST['tempNomeRuolo']);
             //aggiorno
             if($this->ruoloController->updateRuolo($ruolo, $_POST['idRuolo'])){
@@ -435,12 +472,29 @@ class WriterCV {
         else if($ruolo->pubblicato == 0){
             return '<form action="'.curPageURL().'" method="POST" class="container-approva"><input type="hidden" name="idRuolo" value="'.$ruolo->ID.'"/><input type="submit" name="approva-ruolo" value="Approva"></form>';
         }
+    } 
+    
+    function printStatoCV($cv){
+        if($cv->pubblicato == 1){
+            return 'Pubblicato';
+        }
+        else if($cv->pubblicato == 0){
+            //Al cv per approvarlo devo anche effettuare un controllo sul ruolo. 
+            //Se il ruolo non è approvato non posso approvare anche il CV
+            $ruolo = $this->ruoloController->getRuoloById($cv->ruolo);
+            if($ruolo->getPubblicato() == 1){            
+                return '<form action="'.curPageURL().'" method="POST" class="container-approva"><input type="hidden" name="idCV" value="'.$cv->ID.'"/><input type="submit" name="approva-cv" value="Approva"></form>';
+            }
+            else{
+                return '<form action="'.curPageURL().'" method="POST" class="container-approva"><input type="hidden" name="idCV" value="'.$cv->ID.'"/><input type="submit" name="approva-cv" value="Approva" disabled></form>';
+            }
+        }
     }
-    
-    
+       
     public function printCVs($cvs){
         if(count($cvs) > 0){
 ?>
+        Curriculum trovati: <?php echo count($cvs); ?>
         <table class="table-cvs">
             <thead>
                 <tr>
@@ -459,22 +513,44 @@ class WriterCV {
             <tbody>
 <?php
             foreach($cvs as $cv){
+                
+                $regione = $this->locatorController->getRegioneById($cv->regione);
+                $provincia = $this->locatorController->getProvinciaById($cv->provincia);
+                
+                $temp_ruolo = $this->ruoloController->getRuoloById($cv->ruolo);
+                $nomeRuolo = "";
+                if($temp_ruolo != null){
+                   $nomeRuolo .= getNome($temp_ruolo);
+                }
+                else{
+                    $nomeRuolo .= '---';
+                }
+                
+                $location = "";
+                if($regione != null){
+                    $location.= $regione->regione;
+                    if($provincia != null){
+                        $location.= ' - '.$provincia->provincia;
+                    }
+                }
+                else{
+                    $location.="ovunque";
+                }
+               
 ?>
                 <tr>
-                    <td><?php echo $cv->data_inserimento; ?></td>
-                    <td><?php echo $cv->cognome ?></td>
-                    <td><?php echo $cv->nome ?></td>
-                    <td><?php echo $cv->email ?></td>
-                    <td><?php echo $cv->categoria ?></td>
-                    <td><?php echo $cv->ruolo ?></td>
-                    <td><?php echo $cv->regione.' '.$cv->provincia ?></td>
-                    <td><?php echo $cv->cv ?></td>
-                    <td><?php echo $cv->pubblicato ?></td>
+                    <td><?php /* data */ echo getTime($cv->data_inserimento) ?></td>
+                    <td><?php /* cognome */ echo $cv->cognome ?></td>
+                    <td><?php /* nome */ echo $cv->nome ?></td>
+                    <td><?php /* email */ echo $cv->email ?></td>
+                    <td><?php /* nome categoria */ echo getNomeCategoriaById($cv->categoria) ?></td>
+                    <td><?php /* nome ruolo */ echo $nomeRuolo ?></td>
+                    <td><?php /* nome regione e provincia */ echo $location ?></td>
+                    <td><a target="_blank" href="<?php echo get_home_url().'/'.$cv->cv ?>">Apri il CV</a></td>
+                    <td><?php echo $this->printStatoCV($cv) ?></td>
                     <td>
                         <form action="<?php echo curPageURL() ?>" name="modifica-cv" method="POST">
-                            <input type="hidden" name="idCV" value="<?php echo $cv->ID ?>" />                        
-                            <input type="button" name="modifica-cv" value="Modifica">
-                            <input style="display:none" type="submit" name="aggiorna-cv" value="Aggiorna">
+                            <input type="hidden" name="idCV" value="<?php echo $cv->ID ?>" /> 
                             <input type="submit" name="elimina-cv" value="Elimina">
                         </form>
                 </tr>
@@ -499,6 +575,7 @@ class WriterCV {
         //considero ruoli un array di ruoli
         if(count($ruoli) > 0){
 ?>        
+        Ruoli trovati: <?php echo count($ruoli); ?>
         <table class="table-ruoli">
             <thead>
                 <tr>
@@ -515,7 +592,7 @@ class WriterCV {
 ?>
                 <tr>
                     <td><input type="text" name="nome-ruolo-<?php echo $ruolo->ID ?>" value="<?php echo $ruolo->nome ?>" disabled/></td>
-                    <td><?php echo getCategoriaById($ruolo->categoria) ?></td>
+                    <td><?php echo getNomeCategoriaById($ruolo->categoria) ?></td>
                     <td><?php echo $this->printStatoRuolo($ruolo) ?></td>
                     <td>
                         <form action="<?php echo curPageURL() ?>" method="POST"  class="azione-ruolo">
@@ -567,6 +644,10 @@ class WriterCV {
         $this->printCVs($this->cvController->getCVsNonPubblicati());
     }
     
+    public function printUltimiCVsPubblicati(){
+        $this->printCVs($this->cvController->getUltimiCVsPubblicati());
+    }
+    
     public function printRuoliNonPubblicati(){
         $this->printRuoli($this->ruoloController->getRuoliNonPubblicati());
     }
@@ -594,8 +675,46 @@ class WriterCV {
             
             $this->printRuoli($this->ruoloController->searchRuoli($fields));
         }
-                
-        
+    }
+    
+    public function listenerSearchCV(){
+        //qua risiede l'ascoltatore della ricerca dei CV
+        if(isset($_POST['ricerca-cv'])){
+                        
+            $param = array();
+            
+            if(isset($_POST['ricerca-nome']) && trim($_POST['ricerca-nome']) != '' ){
+                $param['nome'] = trim($_POST['ricerca-nome']);
+            }
+            if(isset($_POST['ricerca-cognome']) && trim($_POST['ricerca-cognome']) != '' ){
+                $param['cognome'] = trim($_POST['ricerca-cognome']);
+            }
+            if(isset($_POST['ricerca-email']) && trim($_POST['ricerca-email']) != '' ){
+                $param['email'] = trim($_POST['ricerca-email']);
+            }
+            if(isset($_POST['ricerca-categoria']) && trim($_POST['ricerca-categoria']) != '' ){
+                $param['categoria'] = trim($_POST['ricerca-categoria']);
+            }
+            if(isset($_POST['ruolo']) && trim($_POST['ruolo']) != '' ){
+                $param['ruolo'] = trim($_POST['ruolo']);
+            }
+            if(isset($_POST['ricerca-categoria']) && trim($_POST['ricerca-categoria']) != '' ){
+                $param['categoria'] = trim($_POST['ricerca-categoria']);
+            }
+            if(isset($_POST['regione']) && trim($_POST['regione']) != '' ){
+                $param['regione'] = trim($_POST['regione']);
+            }
+            if(isset($_POST['provincia']) && trim($_POST['provincia']) != '' ){
+                $param['provincia'] = trim($_POST['provincia']);
+            }
+            if(isset($_POST['ricerca-stato']) && trim($_POST['ricerca-stato']) != '' ){
+                $param['pubblicato'] = trim($_POST['ricerca-stato']);
+            }
+            
+            //stampo il risultato
+            $this->printCVs($this->cvController->getCVsByParameters($param));
+            
+        }
     }
     
 }

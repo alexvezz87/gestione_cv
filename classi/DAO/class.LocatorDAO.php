@@ -50,6 +50,26 @@ class LocatorDAO {
             return -1;
         }
     }
+    
+    public function getRegioneById($id){
+        try{
+            $query = "SELECT * FROM ".$this->regione." WHERE cod_regione = '".$id."'";            
+            return $this->wpdb->get_row($query);
+        } catch (Exception $ex) {
+             _e($ex);
+            return -1;
+        }
+    }
+    
+    public function getProvinciaById($id){
+         try{
+            $query = "SELECT * FROM ".$this->provincia." WHERE cod_provincia = '".$id."'";            
+            return $this->wpdb->get_row($query);
+        } catch (Exception $ex) {
+             _e($ex);
+            return -1;
+        }
+    }
 
     
 }

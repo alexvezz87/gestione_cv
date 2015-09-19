@@ -229,7 +229,7 @@ class RuoloDAO {
     public function getRuoloByID($idRuolo){
        
         try{
-            $query = "SELECT * FROM ".$this->table." WHERE ID = ".$idRuolo;            
+            $query = "SELECT * FROM ".$this->table." WHERE ID = ".$idRuolo;  
             return $this->wpdb->get_row($query);
         }
         catch(Exception $ex){

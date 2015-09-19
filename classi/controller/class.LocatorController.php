@@ -55,5 +55,13 @@ class LocatorController {
         }
         return false;
     }
+    
+    public function getRegioneById($id){
+        return $this->DAO->getRegioneById($id);        
+    }
+    
+    public function getProvinciaById($id){
+        return $this->DAO->getProvinciaById($id);
+    }
 
 }

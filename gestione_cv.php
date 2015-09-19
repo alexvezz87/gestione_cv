@@ -17,6 +17,7 @@ License: GPLv2 or later
 //includo le librerie
 require_once 'install_DB.php';
 require_once 'classi/classes.php';
+require_once 'functions.php';
 
 //indico la cartella dove è contenuto il plugin
 require_once (dirname(__FILE__) . '/gestione_cv.php');

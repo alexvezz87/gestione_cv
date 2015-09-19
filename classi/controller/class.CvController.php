@@ -49,14 +49,13 @@ class CvController {
      * @param CV $cv
      * @return boolean
      */
-    public function deleteCV(CV $cv){
+    public function deleteCV($idCV){
         //per eliminare un cv, prima devo ottenere il suo ID
-        $idCV = $this->DAO->getCvID($cv);
-        if($idCV != null && $idCV != false){
-            if($this->DAO->deleteCV($idCv)== true){
-                return true;
-            }            
-        }
+               
+        if($this->DAO->deleteCV($idCV)== true){
+            return true;
+        }            
+       
         return false;
         
     }
@@ -69,7 +68,7 @@ class CvController {
     
     public function getCVsByParameters($param){
         $result = $this->DAO->getCVsByParameters($param);
-        return $this->getCVsArray($result);
+        return $result;
     }
     
     /**
@@ -83,18 +82,8 @@ class CvController {
             $cvs = array();
             //ciclo da verificare
             foreach($result as $value){
-                //creo una nuova istanza di CV
-                $cv = new CV();                
-                $cv->setCategoria($value->categoria);
-                $cv->setCognome($value->cognome);
-                $cv->setCv($value->cv);
-                $cv->setDataInserimento($value->data_inserimento);
-                $cv->setEmail($value->email);                
-                $cv->setNome($value->nome);
-                $cv->setProvincia($value->provincia);
-                $cv->setPubblicato($value->pubblicato);
-                $cv->setRegione($value->regione);
-                $cv->setRuolo($value->ruolo);
+                //creo una nuova istanza di CV                
+                $cv = $this->fromQueryResultToCv($value); 
                 //salvo il cv nell'array di cvs
                 array_push($cvs, $cv);
             }
@@ -104,25 +93,52 @@ class CvController {
         return false;
     }
     
+    function fromQueryResultToCv($value){
+        print_r($value);
+        $cv = new CV();
+        $cv->setCategoria($value->categoria);
+        $cv->setCognome($value->cognome);
+        $cv->setCv($value->cv);
+        $cv->setDataInserimento($value->data_inserimento);
+        $cv->setEmail($value->email);                
+        $cv->setNome($value->nome);
+        $cv->setProvincia($value->provincia);
+        $cv->setPubblicato($value->pubblicato);
+        $cv->setRegione($value->regione);
+        $cv->setRuolo($value->ruolo);
+        return $cv;
+    }
+    
     /**
      * La funzione dato un determinato cv, lo aggiorna a database
      * 
      * @param CV $cv
      * @return boolean
      */
-    public function updateCV(CV $cv){
-        //per aggiornare un cv, devo prima ottenere il suo id
-        $idCV = $this->DAO->getCvID($cv);
-        if($idCV != null && $idCV != false){
-            if($this->DAO->updateCV($cv, $idCV) == true){
-                return true;
-            }
+    public function updateCV(CV $cv, $idCV){
+        //ottengo il ruolo dall'ID
+        $temp = new CV();
+        $temp = $this->fromQueryResultToCv($this->DAO->getCvById($idCV));       
+        //dal cv si può modificare solo lo stato di pubblicato        
+        $temp->setPubblicato($cv->getPubblicato());
+        
+        if($this->DAO->updateCV($temp, $idCV) == true){
+            return true;
         }
         return false;
     }
     
     public function getCVsNonPubblicati(){
         return $this->DAO->getCVsNonPubblicati();
+    }
+    
+    public function getUltimiCVsPubblicati(){
+        return $this->DAO->getUltimiCvPubblicati();
+    }
+    
+    public function getCvById($idCV){
+        $temp = $this->DAO->getCvById($idCV);
+        return $this->fromQueryResultToCv($temp);
     }
 }
 

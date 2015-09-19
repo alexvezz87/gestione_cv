@@ -149,7 +149,11 @@ class CvDAO {
              * $parameters['pubblicato']             *             
              */
             
-            $query = "SELECT * FROM ".$this->table." WHERE categoria = ".$parameters['categoria'];
+            $query = "SELECT * FROM ".$this->table." WHERE 1=1";
+            //categoria 
+            if( isset($parameters['categoria']) && ($parameters['categoria'] != null && $parameters['categoria']!= '')){
+                $query.=" AND categoria = ".$parameters['categoria'];            }
+            
             //ruolo
             if( isset($parameters['ruolo']) && ($parameters['ruolo'] != null && $parameters['ruolo']!= '')){
                 $query.=" AND ruolo = ".$parameters['ruolo'];
@@ -199,6 +203,19 @@ class CvDAO {
         }
     }
     
+    public function getUltimiCvPubblicati(){
+        try{
+            //Preparo la query
+            $query = "SELECT * FROM ".$this->table." WHERE pubblicato = 1 ORDER BY ID DESC LIMIT 10";
+            
+            return $this->wpdb->get_results($query);
+            
+        } catch (Exception $ex) {
+            _e($ex);
+            return -1;
+        }
+    }
+    
     
     /**
      * La funzione aggiorna i campi di un cv esistente riconosciuto tramite l'ID
@@ -223,7 +240,8 @@ class CvDAO {
                             'ruolo' => addslashes($cv->getRuolo()),
                             'regione' => addslashes($cv->getRegione()),
                             'provincia' => addslashes($cv->getProvincia()),
-                            'cv' => addslashes($cv->getCv())
+                            'cv' => addslashes($cv->getCv()),
+                            'pubblicato' => addslashes(($cv->getPubblicato()))
                         ),
                         array('ID' => $idCV),
                         array('%s', '%s', '%s', '%d', '%s', '%s', '%s'),
@@ -245,8 +263,21 @@ class CvDAO {
      */
     public function deleteCV($idCv){
         try{
+            
             $this->wpdb->delete($this->table, array('ID' => $idCv));
             return true;
+        } catch (Exception $ex) {
+            _e($ex);
+            return false;
+        }
+    }
+    
+    public function getCvById($idCV){
+        try{
+            $query = "SELECT * FROM ".$this->table." WHERE ID = ".$idCV;
+            
+            return $this->wpdb->get_row($query);
+            
         } catch (Exception $ex) {
             _e($ex);
             return false;

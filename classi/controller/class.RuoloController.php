@@ -147,13 +147,8 @@ class RuoloContoller {
      */
     public function updateRuolo(Ruolo $ruolo, $idRuolo){
         
-        //ottengo il ruolo dall'id
-        $temp = $this->DAO->getRuoloByID($idRuolo);
-        
         //il ruolo che andrò ad aggiornare avrà come unico campo modificabile il nome
         //per questo prendo categoria e pubblicato dalla query fatta a db
-        $ruolo->setCategoria($temp->categoria);
-        $ruolo->setPubblicato($temp->pubblicato);
         
         if($this->DAO->updateRuolo($ruolo, $idRuolo) == true){
             return true;
@@ -164,12 +159,12 @@ class RuoloContoller {
     
     
     public function getRuoloById($idRuolo){
-        $temp = $this->DAO->getRuoloByID($idRuolo);
+        $temp = $this->DAO->getRuoloByID($idRuolo);       
         if($temp != null){
             $ruolo = new Ruolo();
             $ruolo->setCategoria($temp->categoria);
             $ruolo->setPubblicato($temp->pubblicato);
-            $ruolo->setNome($temp->nome);
+            $ruolo->setNome($temp->nome);            
             return $ruolo;
         }
         return null;
