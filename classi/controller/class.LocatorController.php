@@ -63,5 +63,27 @@ class LocatorController {
     public function getProvinciaById($id){
         return $this->DAO->getProvinciaById($id);
     }
+    
+    public function getCodRegioneByProv($provincia){
+        //Dato il non allineamento dei valori di provincia nelle tabelle di buddypress
+        //devo fare un controllo se questi valori sono rappresentati in modo di SIGLA PROVINCIA o NOME COMPLETO
+        
+        //primo controllo su SIGLA
+        $result = array();
+        $temp = null;
+        if($this->DAO->getCodRegioneBySiglaProv($provincia) != null){
+            $temp = $this->DAO->getCodRegioneBySiglaProv($provincia);
+        }
+        else if($this->DAO->getCodRegioneByNomeProv($provincia)!= null){
+            $temp = $this->DAO->getCodRegioneByNomeProv($provincia);
+        }        
+        
+        if($temp != null){
+            $result['cod_regione'] = $temp->cod_regione;
+            $result['cod_provincia'] = $temp->cod_provincia;
+        }
+        
+        return $result; 
+    }
 
 }

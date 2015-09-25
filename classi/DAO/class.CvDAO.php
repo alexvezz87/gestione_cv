@@ -146,7 +146,8 @@ class CvDAO {
              * $parameters['nome']
              * $parameters['cognome']
              * $parameters['email']
-             * $parameters['pubblicato']             *             
+             * $parameters['pubblicato'] 
+             * $parameters['ordine']                         
              */
             
             $query = "SELECT * FROM ".$this->table." WHERE 1=1";
@@ -182,6 +183,13 @@ class CvDAO {
              if( isset($parameters['pubblicato']) && ($parameters['pubblicato'] != null && $parameters['pubblicato']!= '')){
                 $query.=" AND pubblicato = ".$parameters['pubblicato']."";
             }
+            //ordine
+            if( isset($parameters['ordine']) && ($parameters['ordine'] != null && $parameters['ordine']!= '')){
+                $query.=" ORDER BY ".$parameters['ordine']." DESC";
+            }
+            
+            print_r($query);
+            
             
             return $this->wpdb->get_results($query);
              

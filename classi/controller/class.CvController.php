@@ -94,7 +94,7 @@ class CvController {
     }
     
     function fromQueryResultToCv($value){
-        print_r($value);
+       // print_r($value);
         $cv = new CV();
         $cv->setCategoria($value->categoria);
         $cv->setCognome($value->cognome);

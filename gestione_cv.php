@@ -49,6 +49,12 @@ function print_insert_cv(){
     $printer->printInsertCvForm();    
 }
 
+//stampo la pagina di visualizzazione CVs per gli utenti
+add_shortcode('printShowCVs', 'print_show_cvs');
+function print_show_cvs(){
+    include 'pages/visualizza_cvs.php';
+}
+
 
 //Aggiungo il menu
 function add_admin_menu(){

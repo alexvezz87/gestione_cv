@@ -70,6 +70,26 @@ class LocatorDAO {
             return -1;
         }
     }
+        
+    public function getCodRegioneBySiglaProv($sigla){
+        try{
+            $query = "SELECT * FROM ".$this->provincia." WHERE sigla = '".$sigla."'";
+            return $this->wpdb->get_row($query);
+        } catch (Exception $ex) {
+            _e($ex);
+            return null;
+        }
+    }
+    
+    public function getCodRegioneByNomeProv($provincia){
+        try{
+            $query = "SELECT * FROM ".$this->provincia." WHERE provincia = '".$provincia."'";
+            return $this->wpdb->get_row($query);
+        } catch (Exception $ex) {
+            _e($ex);
+            return null;
+        }
+    }
 
     
 }

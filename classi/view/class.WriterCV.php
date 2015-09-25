@@ -28,8 +28,11 @@ class WriterCV {
         $this->ruoloController = new RuoloContoller();
         $this->locatorController = new LocatorController();
     }
-    
-    
+    function getLocatorController() {
+        return $this->locatorController;
+    }
+
+        
     //metodi
     function getCvController() {
         return $this->cvController;
@@ -158,12 +161,24 @@ class WriterCV {
                     
                     //eseguo il controllo se pubblicare o meno il cv 
                     //ciò è dato dalla pubblicazione del RUOLO. Se il Ruolo è pubblicato, pubblico anche il CV
-                    if($this->ruoloController->isRuoloPubblicato($cv->getRuolo())){
-                        $cv->setPubblicato(1);
+                    
+                    if($cv->getRuolo()!= null){
+                        //se il ruolo è stato inserito allora bisogna che questo venga controllato
+                        //se il ruolo esiste ed è pubblicato allora il cv può essere pubblicato
+                        //se il ruolo non è presente oppure non è ancora stato approvato, il cv non può essere pubblicato
+                    
+                        if($this->ruoloController->isRuoloPubblicato($cv->getRuolo())){
+                            //AGGIUNTA --> Il CV viene pubblicato anche se non è associato al ruolo.
+                            $cv->setPubblicato(1);
+                        }
+                        else{
+                            $cv->setPubblicato(0);
+                        }
                     }
                     else{
-                        $cv->setPubblicato(0);
-                    }
+                        //se il ruolo non è presente nel cv inviato, allora questo può essere pubblicato tranquillamente.
+                        $cv->setPubblicato(1);
+                    }                    
                     
                     //salvo il cv nel db
                     $valueSaveCV = $this->cvController->saveCV($cv);
@@ -482,12 +497,14 @@ class WriterCV {
             //Al cv per approvarlo devo anche effettuare un controllo sul ruolo. 
             //Se il ruolo non è approvato non posso approvare anche il CV
             $ruolo = $this->ruoloController->getRuoloById($cv->ruolo);
-            if($ruolo->getPubblicato() == 1){            
+           
+            if($ruolo != null && $ruolo->getPubblicato() == 1){            
                 return '<form action="'.curPageURL().'" method="POST" class="container-approva"><input type="hidden" name="idCV" value="'.$cv->ID.'"/><input type="submit" name="approva-cv" value="Approva"></form>';
             }
             else{
                 return '<form action="'.curPageURL().'" method="POST" class="container-approva"><input type="hidden" name="idCV" value="'.$cv->ID.'"/><input type="submit" name="approva-cv" value="Approva" disabled></form>';
             }
+           
         }
     }
        
