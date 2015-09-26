@@ -236,7 +236,7 @@ class WriterCV {
                 <input type="text" id="altro-ruolo" name="altro-ruolo" value="" />
             </div>
             <div class="field doppio">
-                <?php echo $this->printRegioniProvince(); ?>
+                <?php echo $this->printRegioniProvince('Dove cerchi occupazione ?'); ?>
             </div>
             <div class="field">
                 <label for="carica-cv">Carica il CV* </label>
@@ -254,9 +254,9 @@ class WriterCV {
    
     }      
   
-    function printRegioniProvince(){
+    function printRegioniProvince($title){
         
-        $html = 'Dove cerchi occupazione ?'
+        $html = $title
                 . '<div id="container-regione">'
                 . '<label for="regione">Regione</label>'
                 . '<select id="regione" name="regione">'
@@ -507,7 +507,76 @@ class WriterCV {
            
         }
     }
-       
+    
+    public function printUserCVs($cvs){
+        if(count($cvs) > 0){
+?>
+        Curriculum presenti: <?php echo count($cvs); ?>
+        <table class="table-cvs">
+            <thead>
+                <tr>                    
+                    <td>Cognome</td>
+                    <td>Nome</td>
+                    <td>Email</td>                    
+                    <td>Ruolo</td>
+                    <td>Dove</td>
+                    <td>CV</td>                    
+                </tr>
+            </thead>
+            <tbody>
+<?php
+            foreach($cvs as $cv){
+                
+                $regione = $this->locatorController->getRegioneById($cv->regione);
+                $provincia = $this->locatorController->getProvinciaById($cv->provincia);
+                
+                $temp_ruolo = $this->ruoloController->getRuoloById($cv->ruolo);
+                $nomeRuolo = "";
+                if($temp_ruolo != null){
+                   $nomeRuolo .= getNome($temp_ruolo);
+                }
+                else{
+                    $nomeRuolo .= 'non indicato';
+                }
+                
+                $location = "";
+                if($regione != null){
+                    $location.= $regione->regione;
+                    if($provincia != null){
+                        $location.= ' - '.$provincia->provincia;
+                    }
+                }
+                else{
+                    $location.="ovunque";
+                }
+               
+?>
+                <tr>                   
+                    <td><?php /* cognome */ echo $cv->cognome ?></td>
+                    <td><?php /* nome */ echo $cv->nome ?></td>
+                    <td><a href="mailto:<?php /* email */ echo $cv->email ?>"><?php /* email */ echo $cv->email ?></a></td>                   
+                    <td><?php /* nome ruolo */ echo $nomeRuolo ?></td>
+                    <td><?php /* nome regione e provincia */ echo $location ?></td>
+                    <td><a target="_blank" href="<?php echo get_home_url().'/'.$cv->cv ?>">Visualizza il CV</a></td>                    
+                </tr>
+<?php
+            }
+?>
+            </tbody>
+        </table>
+<?php
+        }
+        else{
+            echo 'Non ci sono curriculum da visualizzare';
+        }
+        
+    }
+    
+    
+    /**
+     * La funzione stampa la tabella amministrativa dei CVs
+     * @param type $cvs
+     */
     public function printCVs($cvs){
         if(count($cvs) > 0){
 ?>
@@ -570,6 +639,7 @@ class WriterCV {
                             <input type="hidden" name="idCV" value="<?php echo $cv->ID ?>" /> 
                             <input type="submit" name="elimina-cv" value="Elimina">
                         </form>
+                    </td>
                 </tr>
 <?php
             }

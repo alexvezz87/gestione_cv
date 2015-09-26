@@ -14,6 +14,24 @@ $cvController = new CvController();
 //2. PROVINCIA
 
 $user_ID = get_current_user_id(); //0 in caso di utente non registrato
+
+
+//LISTENER per aggiornare la provincia
+if(isset($_POST['aggiorna-provincia'])){
+    //aggiorno i campi di provincia
+    //ottengo il nome della pronvincia
+    $provincia = $locatorController->getProvinciaById($_POST['provincia']);
+    //aggiorno   
+    if(updateBuddypressProvincia($_POST['id-utente'], $provincia->sigla) == true){
+        echo '<div class="ok">Provincia aggiornata con successo!</div>';
+    }
+    else{
+        echo '<div class="ko">Sono stati riscontrati dei problemi nell\'aggiornare la provincia.</div>';
+    }
+}
+
+
+
 if($user_ID != 0){
     //utente registrato
     $categoria = getIdCategoriaByUser($user_ID);
@@ -45,46 +63,30 @@ if($user_ID != 0){
            $param_1['ordine'] = 'provincia, ruolo';
            $result_1 = $cvController->getCVsByParameters($param_1);
            
-           echo '<h4>Categoria + Regione + Provincia</h4>';
-           echo '<pre>';
-           print_r($result_1);
-           echo '</pre>';
-           
            $param_2 = array();
            $param_2['categoria'] = $categoria;
            $param_2['regione'] = $location['cod_regione'];  
            $param_2['pubblicato'] = 1;
            $param_2['ordine'] = 'ruolo';
            $result_2 = $cvController->getCVsByParameters($param_2);
-           
-           echo '<h4>Categoria + Regione </h4>';
-           echo '<pre>';
-           print_r($result_2);
-           echo '</pre>';
-           
+                    
            $param_3 = array();
            $param_3['categoria'] = $categoria; 
            $param_3['pubblicato'] = 1;
            $param_3['ordine'] = 'ruolo';
            $result_3 = $cvController->getCVsByParameters($param_3);           
-           echo '<h4>Categoria</h4>';
-           echo '<pre>';
-           print_r($result_3);
-           echo '</pre>';
-           
-           $result = array_unique(array_merge($result_1, $result_2, $result_3), SORT_REGULAR);
           
-           echo '<h4>Merge</h4>';
-           echo '<pre>';
+           $result = array_unique(array_merge($result_1, $result_2, $result_3), SORT_REGULAR);
+                    
            if(count($result > 0)){
-               print_r($result);
+               $printer->printUserCVs($result);
            }
            else{
                
                echo 'non ci sono curriculum da visualizzare';
            }
            
-           echo '</pre>';
+           
            
            
            
@@ -92,7 +94,16 @@ if($user_ID != 0){
        else{
            //non ho ottenuto la location dell'utente, questo vuol dire che ha scritto male la provincia o non compare nella tabella delle province
            //Bisogna invitare l'utente a selezionare una provincia esistente e aggiornare il suo campo provincia nella famiglia Indirizzo.
-           echo 'non riconosco la tua provincia';
+           echo 'Il sistema non è riuscito ad identificare la tua provincia di appartenenza.';
+           echo '<br>';
+           echo 'Ti suggeriamo di aggiornarla con i nostri suggerimenti.';
+          
+           echo '<form action="'.curPageURL().'" method="POST">';
+           echo '<input type="hidden" name="id-utente" value="'.$user_ID.'" />';
+           echo $printer->printRegioniProvince('Scegli regione e provincia.');
+           $printer->printAjaxCallRegioniProvince();
+           echo '<input type="submit" name="aggiorna-provincia" value="Aggiorna provincia">';
+           echo '</form>';
        }
         
         
@@ -100,7 +111,9 @@ if($user_ID != 0){
     }
     else if($provincia == null){
         //Invito all'utente di compilare i campi indirizzo
-        echo 'non hai compilato i campi indirizzo';
+        $current_user = wp_get_current_user();
+        echo 'Il tuo profilo non è completo. Per usufruire di questa funzionalità ti chiediamo di completare la profilazione aggiungendo l\'indirizzo della tua attività.<br>';
+        echo '<a class="modifica-profilo" href="'.get_home_url().'/members/'.$current_user->user_login.'/profile/edit/group/2/">Completa indirizzo</a>';
     }
 
 }

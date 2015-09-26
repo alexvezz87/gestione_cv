@@ -27,7 +27,7 @@ $printer = new WriterCV();
         <label for="ricerca-email">Email</label>
         <input type="email" id="ricerca-email" name="ricerca-email" value="" />
                 
-        <?php echo $printer->printRegioniProvince() ?>        
+        <?php echo $printer->printRegioniProvince('') ?>        
         
         <label for="ricerca-categoria">Categoria</label>
         <?php echo getSelectCategoriaCommercialeNotRequired();  ?>

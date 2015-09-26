@@ -188,8 +188,6 @@ class CvDAO {
                 $query.=" ORDER BY ".$parameters['ordine']." DESC";
             }
             
-            print_r($query);
-            
             
             return $this->wpdb->get_results($query);
              
