@@ -43,10 +43,25 @@ class LocatorDAO {
     
     public function getProvince($cod_regione){
         try{
+            global $wpdb;
             $query = "SELECT * FROM ".$this->provincia." WHERE cod_regione = '".$cod_regione."' ORDER BY provincia ASC";
-            return $this->wpdb->get_results($query);
+            //$query = "SELECT * FROM alexsolu_db_04.twn_ruoli";
+            //print_r($wpdb);
+            return $wpdb->get_results($query);
         } catch (Exception $ex) {
-            _e($ex);
+            print_r($ex);
+            return -1;
+        }
+    }
+    
+    public function getProvinceByAjaxCall($cod_regione, $mydb){
+        try{            
+            $query = "SELECT * FROM ".$this->provincia." WHERE cod_regione = '".$cod_regione."' ORDER BY provincia ASC";  
+            print_r('ciao');
+            print_r($mydb);
+            return $mydb->get_results($query);
+        } catch (Exception $ex) {
+            print_r($ex);
             return -1;
         }
     }

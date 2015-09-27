@@ -26,7 +26,24 @@ and open the template in the editor.
     font-weight: bold;
 }
 
+#inserimento-cv .field input[type=text], #inserimento-cv .field input[type=email]{
+    border-bottom:1px solid #999;
+}
+
 #inserimento-cv .submit-button {
     margin-top:25px;
     float:right;
 }
+
+.table-cvs {
+    border:1px solid #999;
+    border-collapse: collapse;
+    width:95%;
+    margin:auto;
+    margin-top:10px;
+}
+
+.table-cvs thead{ font-weight: bold;}
+.table-cvs thead tr {background:#ddd}
+.table-cvs thead tr td{border:1px solid #999}
+.table-cvs tr td{padding:10px; border:1px solid #ddd}

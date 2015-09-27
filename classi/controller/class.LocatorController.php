@@ -40,6 +40,25 @@ class LocatorController {
     
     public function getProvince($cod_regione){
         $province = $this->DAO->getProvince($cod_regione);
+        //print_r($province);
+        if(count($province) > 0){
+            $result = array();
+            foreach($province as $provincia){
+                $temp = array();
+                $temp['cod'] = $provincia->cod_provincia;
+                $temp['nome'] = $provincia->provincia;
+                $temp['sigla'] = $provincia->sigla;
+                
+                array_push($result, $temp);
+            }
+            
+            return $result;
+        }
+        return false;
+    }
+    
+    public function getProvinceByAjaxCall($cod_regione, $mydb){
+        $province = $this->DAO->getProvinceByAjaxCall($cod_regione, $mydb);
         if(count($province) > 0){
             $result = array();
             foreach($province as $provincia){

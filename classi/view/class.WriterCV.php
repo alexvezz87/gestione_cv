@@ -338,7 +338,17 @@ class WriterCV {
                  //pulisco
                     jQuery('#container-province').html("");
                 if(idRegione !== ''){
-                    jQuery.post('<?php echo plugins_url().'/gestione_cv/ajax/ajax_call.php' ?>', {id_regione: idRegione}, printProvince, 'json');
+                    //jQuery.post('<?php echo plugins_url().'/gestione_cv/ajax/ajax_call.php' ?>', {id_regione: idRegione}, printProvince, 'json');
+                    
+                    jQuery.ajax({
+                        type:'POST',
+                        dataType: 'json',
+                        url: '<?php echo plugins_url().'/gestione_cv/ajax/ajax_call.php' ?>',
+                        data: {id_regione: idRegione},
+                        success: function(data){                           
+                                    printProvince(data);                           
+                                }
+                    });
                 }
     
                 jQuery(document).on('change', '#regione',function(){
@@ -346,7 +356,18 @@ class WriterCV {
                      //pulisco
                     jQuery('#container-province').html("");
                     if(idRegione !== ''){
-                        jQuery.post('<?php echo plugins_url().'/gestione_cv/ajax/ajax_call.php' ?>', {id_regione: idRegione}, printProvince, 'json');
+                        //jQuery.post('<?php echo plugins_url().'/gestione_cv/ajax/ajax_call.php' ?>', {id_regione: idRegione}, printProvince, 'json');
+                        
+                        jQuery.ajax({
+                            type:'POST',
+                            dataType: 'json',
+                            url: '<?php echo plugins_url().'/gestione_cv/ajax/ajax_call.php' ?>',
+                            data: {id_regione: idRegione},
+                           success: function(data){                           
+                                     printProvince(data);                           
+                                    }      
+                            
+                        });
                     }
                 });
                 
