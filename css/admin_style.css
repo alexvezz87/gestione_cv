@@ -1,0 +1,106 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 26-set-2015, 18.41.04
+    Author     : Alex
+*/
+
+.container-table-ruoli {
+    float:left;
+    width:48%;
+    margin-right: 20px;
+}
+
+.table-ruoli{
+    border:1px solid #999;
+    border-collapse: collapse;
+    width:100%;   
+}
+
+.table-cvs {
+    border:1px solid #999;
+    border-collapse: collapse;
+    width:95%;
+    margin:auto;
+    margin-top:10px;
+}
+
+.table-cvs thead, .table-ruoli thead { font-weight: bold;}
+.table-cvs thead tr, .table-ruoli thead tr {background:#ddd}
+.table-cvs thead tr td, .table-ruoli thead tr td {border:1px solid #999}
+.table-cvs tr td, .table-ruoli tr td {padding:10px; border:1px solid #ddd}
+.table-cvs tbody tr:hover, .table-ruoli tr:hover {background:#AAA; color:#fff}
+
+#ricerca-cv {
+    width:90%;
+    margin:auto;
+    border:1px solid #ddd;
+    margin-bottom:10px;
+    padding:25px;
+}
+
+#ricerca-cv .field {
+    float:left;
+    height: 96px;
+    width:250px;
+}
+#ricerca-cv .field label {display:block;}
+
+#ricerca-cv .ricerca {float:left;}
+#ricerca-cv .ricerca input {width:150px; height: 50px;}
+
+.insert-form {
+    width:40%;
+    border: 1px solid #999;
+    padding:25px;
+}
+.insert-form label {
+   width:250px;
+   display: inline-block;
+    
+}
+
+.insert-form .submit{
+    margin:0;
+    margin-top:25px;
+    padding:0;
+}
+.insert-form .submit input {    
+    width:150px;
+    height: 50px;    
+}
+
+.container-form-ricerca {
+    width:50%;
+    margin-top:20px;
+    display:block;
+    border:1px solid #999;
+    clear:both;
+    padding:25px;
+}
+
+.container-form-ricerca h3 {
+    margin-top:0px;
+}
+.container-form-ricerca .field {
+    float:left;
+    margin-right:10px;
+}
+.container-form-ricerca .field label {
+    display:block
+}
+
+.container-form-ricerca .field.submit{
+    margin:0;
+    margin-top:25px;
+    padding:0;
+}
+
+.container-form-ricerca .field.submit input {
+    
+    width:150px;
+    height:50px;
+}

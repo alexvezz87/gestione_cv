@@ -72,4 +72,21 @@ function add_pagina_gestione_ruoli(){
 
 add_action('admin_menu', 'add_admin_menu');
 
+
+//Aggiungo gli stili
+add_action( 'admin_enqueue_scripts', 'register_admin_style' );
+    
+//richiamo lo stile
+function register_admin_style() {
+    wp_register_style( 'admin_style_css', plugins_url('gestione_cv/css/admin_style.css') );
+    wp_enqueue_style('admin_style_css');
+}
+
+ add_action( 'wp_enqueue_scripts', 'register_style' );
+ function register_style() {
+        wp_register_style( 'style_css', plugins_url('gestione_cv/css/style.css') );
+        wp_enqueue_style('style_css');
+    }
+
+
 ?>

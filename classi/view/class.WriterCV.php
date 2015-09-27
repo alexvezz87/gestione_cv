@@ -232,18 +232,21 @@ class WriterCV {
             </div>
             <div id="contenitore-selettore-ruoli" class="field"></div>
             <div class="field">
-                <label for="altro-ruolo">Inserisci un ruolo, se non presente</label>
+                <label for="altro-ruolo">Aggiungi il tuo ruolo</label>
                 <input type="text" id="altro-ruolo" name="altro-ruolo" value="" />
             </div>
-            <div class="field doppio">
+            <div class="clear"></div>
+            <div class="doppio clear">
                 <?php echo $this->printRegioniProvince('Dove cerchi occupazione ?'); ?>
             </div>
-            <div class="field">
+            <div class="clear"></div>
+            <div class="field clear">
                 <label for="carica-cv">Carica il CV* </label>
                 <input type="hidden" name="MAX_FILE_SIZE" value="4194304" /> 
                 <input id="carica-cv" name="carica-cv" type="file" required>
             </div>
-            <div class="submit-button">
+            <div class="clear"></div>
+            <div class="submit-button clear">
                 <input type="submit" name="invia-cv" value="Invia Curriculum" />
             </div>
         </form>
@@ -258,6 +261,7 @@ class WriterCV {
         
         $html = $title
                 . '<div id="container-regione">'
+                . '<div class="field">'
                 . '<label for="regione">Regione</label>'
                 . '<select id="regione" name="regione">'
                 . '<option value=""></option>';
@@ -268,11 +272,11 @@ class WriterCV {
             $html.= '<option value="'.$regione['cod'].'">'.$regione['nome'].'</option>';
         }
                         
-        $html.= '</select></div>';
+        $html.= '</select></div></div>';
         
         //ottengo le province mediante chiamata ajax
-        $html.= '<label for="provincia">Provincia</label>'
-                . '<div id="container-province"></div>';
+        $html.= '<div class="field"><label for="provincia">Provincia</label>'
+                . '<div id="container-province"></div></div>';
         
         return $html;        
     }
@@ -314,7 +318,7 @@ class WriterCV {
                         html+= '</select>';
                     }
                     else{
-                        html += '<br>Ruoli non acora disponibili per questa categoria';
+                        html += 'Nessun ruolo presente.';
                     }
                     
                     jQuery('#contenitore-selettore-ruoli').append(html);
@@ -658,10 +662,12 @@ class WriterCV {
      * 
      * @param type $ruoli
      */
-    public function printRuoli($ruoli){
+    public function printRuoli($ruoli, $title){
         //considero ruoli un array di ruoli
         if(count($ruoli) > 0){
-?>        
+?>      
+        <div class="container-table-ruoli">
+            <h3><?php echo $title ?></h3>
         Ruoli trovati: <?php echo count($ruoli); ?>
         <table class="table-ruoli">
             <thead>
@@ -697,10 +703,11 @@ class WriterCV {
 ?>
             </tbody>            
         </table>
+        </div>
 <?php    
         }
         else{
-            echo 'Non ci sono ruoli per questa voce';
+            
         }
     }     
     
@@ -735,12 +742,12 @@ class WriterCV {
         $this->printCVs($this->cvController->getUltimiCVsPubblicati());
     }
     
-    public function printRuoliNonPubblicati(){
-        $this->printRuoli($this->ruoloController->getRuoliNonPubblicati());
+    public function printRuoliNonPubblicati($title){
+        $this->printRuoli($this->ruoloController->getRuoliNonPubblicati(), $title);
     }
     
-    public function printUltimiRuoliApprovati(){
-        $this->printRuoli($this->ruoloController->getUltimiRuoliApprovati());
+    public function printUltimiRuoliApprovati($title){
+        $this->printRuoli($this->ruoloController->getUltimiRuoliApprovati(), $title);
     }
     
     public function listenerSearchRuoli(){
@@ -760,7 +767,7 @@ class WriterCV {
                 $fields['pubblicato'] = $_POST['ricerca-stato'];
             }
             
-            $this->printRuoli($this->ruoloController->searchRuoli($fields));
+            $this->printRuoli($this->ruoloController->searchRuoli($fields),'');
         }
     }
     
@@ -797,6 +804,8 @@ class WriterCV {
             if(isset($_POST['ricerca-stato']) && trim($_POST['ricerca-stato']) != '' ){
                 $param['pubblicato'] = trim($_POST['ricerca-stato']);
             }
+            
+            $param['ordine'] = 'id';
             
             //stampo il risultato
             $this->printCVs($this->cvController->getCVsByParameters($param));
