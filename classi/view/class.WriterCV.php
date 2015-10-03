@@ -212,28 +212,24 @@ class WriterCV {
     public function printInsertCvForm(){
         
 ?>
-        <h2>Form di Inserimento</h2>
+        <h2>Inviaci il tuo curriculum!</h2>
         <form id="inserimento-cv" name="inserimento-cv" action="<?php echo curPageURL() ?>" method="POST" enctype="multipart/form-data">
-            <div class="field">
-                <label for="nome">Nome* </label>
-                <input type="text" id="nome" value="" name="nome" required/>
+            <div class="field">                
+                <input type="text" id="nome" value="" name="nome" placeholder="Nome" required/>
             </div>
-            <div class="field">
-                <label for="cognome">Cognome* </label>
-                <input type="text" id="cognome" value="" name="cognome" required/>
+            <div class="field">               
+                <input type="text" id="cognome" value="" name="cognome" placeholder="Cognome" required/>
             </div>
-            <div class="field">
-                <label for="email">Email* </label>
-                <input type="email" id="email" name="email" value="" required/>
+            <div class="field">                
+                <input type="email" id="email" name="email" value="" placeholder="Email" required/>
             </div>
             <div class="field">
                 <label for="select-categoria">Categoria occupazionale* </label>
                 <?php echo getSelectCategoriaCommerciale();  ?>
             </div>
             <div id="contenitore-selettore-ruoli" class="field"></div>
-            <div class="field">
-                <label for="altro-ruolo">Aggiungi il tuo ruolo</label>
-                <input type="text" id="altro-ruolo" name="altro-ruolo" value="" />
+            <div class="field add-ruolo">                
+                <input type="text" id="altro-ruolo" name="altro-ruolo" placeholder="Aggiungi il tuo ruolo" value="" />
             </div>
             <div class="clear"></div>
             <div class="doppio clear">
@@ -249,6 +245,7 @@ class WriterCV {
             <div class="submit-button clear">
                 <input type="submit" name="invia-cv" value="Invia Curriculum" />
             </div>
+            <div class="clear"></div>
         </form>
     <?php   
         //stampo le call Ajax delle select5
@@ -259,7 +256,7 @@ class WriterCV {
   
     function printRegioniProvince($title){
         
-        $html = $title
+        $html = '<div class="title">'.$title.'</div>'
                 . '<div id="container-regione">'
                 . '<div class="field">'
                 . '<label for="regione">Regione</label>'
@@ -318,7 +315,7 @@ class WriterCV {
                         html+= '</select>';
                     }
                     else{
-                        html += 'Nessun ruolo presente.';
+                        html += '<div class="no-result">Nessun ruolo presente.</div>';
                     }
                     
                     jQuery('#contenitore-selettore-ruoli').append(html);

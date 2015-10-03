@@ -8,6 +8,13 @@ and open the template in the editor.
     Author     : Alex
 */
 
+
+#inserimento-cv {
+    padding:15px;
+    background: #EEE none repeat scroll 0% 0%;
+}
+
+
 #inserimento-cv {
     width:95%;
     margin:auto;
@@ -19,7 +26,42 @@ and open the template in the editor.
     height: auto;
     margin-right:10px;
     margin-top:20px;
+    font-size:13px;
+    margin-bottom: 10px;
 }
+
+#inserimento-cv .field input[type=text], #inserimento-cv .field input[type=email], #inserimento-cv .field select{
+    height: 38px;
+    border-width: medium medium 1px !important;
+    border-style: none none solid !important;
+    border-color: -moz-use-text-color -moz-use-text-color rgb(39, 174, 96) !important;
+    -moz-border-top-colors: none !important;
+    -moz-border-right-colors: none !important;
+    -moz-border-bottom-colors: none !important;
+    -moz-border-left-colors: none !important;
+    border-image: none !important;
+    background: transparent none repeat scroll 0% 0% !important;
+     width: 80%;
+}
+
+#inserimento-cv .field select{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: url('../images/icona_down.png') no-repeat center right !important;
+    width: 80%;
+}
+
+#inserimento-cv .no-result{
+    padding-top:10px;
+}
+
+#inserimento-cv input[type=submit]{
+    background: #27AE60;
+    text-transform: uppercase;
+    font-size:20px;
+}
+
 
 #inserimento-cv .field label{
     display:block;
@@ -27,12 +69,23 @@ and open the template in the editor.
 }
 
 #inserimento-cv .field input[type=text], #inserimento-cv .field input[type=email]{
-    border-bottom:1px solid #999;
+    border-bottom:1px solid  #27AE60;
+    background: transparent;
+   
 }
 
 #inserimento-cv .submit-button {
     margin-top:25px;
     float:right;
+}
+
+#inserimento-cv .title {
+    margin-top:10px;
+    font-weight: bold;
+}
+
+#inserimento-cv .add-ruolo{
+    padding-top: 20px;
 }
 
 .table-cvs {
@@ -47,3 +100,15 @@ and open the template in the editor.
 .table-cvs thead tr {background:#ddd}
 .table-cvs thead tr td{border:1px solid #999}
 .table-cvs tr td{padding:10px; border:1px solid #ddd}
+
+.ok {
+    text-align: center;
+    padding:20px;
+    border:4px solid rgb(39, 174, 96);
+}
+
+.ko {
+     text-align: center;
+    padding:20px;
+    border:4px solid #f00;
+}

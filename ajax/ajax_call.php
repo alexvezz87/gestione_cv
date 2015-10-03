@@ -4,8 +4,8 @@
 //url: http://www.alexsoluzioniweb.it/
 
 //da cambiare
-//$temp_path = "/in_elaborazione/TheWorkNote/wordpress/"; //LOCALE
-$temp_path = "/progetti/twn"; //STAGE
+$temp_path = "/in_elaborazione/TheWorkNote/wordpress/"; //LOCALE
+//$temp_path = "/progetti/twn"; //STAGE
 
 
 
@@ -16,9 +16,9 @@ require_once '../classi/classes.php';
 
 add_action( 'wp_ajax_my_action', 'twn_ajax_callback' );
 
-twn_ajax_callback($myDB);
+twn_ajax_callback();
 
-function twn_ajax_callback($myDB){
+function twn_ajax_callback(){
     //chiamata per aggiornare dinamicamente i ruoli data una determinata categoria
     if(isset($_POST['id_categoria'])){
         $ruoloController = new RuoloContoller();
