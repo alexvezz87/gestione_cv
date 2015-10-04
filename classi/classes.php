@@ -15,7 +15,9 @@ require_once 'DAO/class.LocatorDAO.php';
 require_once 'controller/class.CvController.php';
 require_once 'controller/class.RuoloController.php';
 require_once 'controller/class.LocatorController.php';
+require_once 'controller/class.LanguageController.php';
 
 require_once 'view/class.WriterCV.php';
+
 
 ?>

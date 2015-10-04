@@ -22,11 +22,13 @@ class WriterCV {
     private $cvController;
     private $ruoloController;
     private $locatorController;
+    private $languageController;
     
     function __construct() {
         $this->cvController = new CvController();
         $this->ruoloController = new RuoloContoller();
         $this->locatorController = new LocatorController();
+        $this->languageController = new LanguageController();
     }
     function getLocatorController() {
         return $this->locatorController;
@@ -212,38 +214,42 @@ class WriterCV {
     public function printInsertCvForm(){
         
 ?>
-        <h2>Inviaci il tuo curriculum!</h2>
+        <h2><?php echo $this->languageController->getTranslation('sendCvTitle') ?></h2>
         <form id="inserimento-cv" name="inserimento-cv" action="<?php echo curPageURL() ?>" method="POST" enctype="multipart/form-data">
             <div class="field">                
-                <input type="text" id="nome" value="" name="nome" placeholder="Nome" required/>
+                <input type="text" id="nome" value="" name="nome" placeholder="<?php echo $this->languageController->getTranslation('name') ?>" required/>
             </div>
             <div class="field">               
-                <input type="text" id="cognome" value="" name="cognome" placeholder="Cognome" required/>
+                <input type="text" id="cognome" value="" name="cognome" placeholder="<?php echo $this->languageController->getTranslation('surname') ?>" required/>
             </div>
             <div class="field">                
-                <input type="email" id="email" name="email" value="" placeholder="Email" required/>
+                <input type="email" id="email" name="email" value="" placeholder="<?php echo $this->languageController->getTranslation('email') ?>" required/>
             </div>
             <div class="field">
-                <label for="select-categoria">Categoria occupazionale* </label>
+                <label for="select-categoria"><?php echo $this->languageController->getTranslation('category') ?>* </label>
                 <?php echo getSelectCategoriaCommerciale();  ?>
             </div>
             <div id="contenitore-selettore-ruoli" class="field"></div>
             <div class="field add-ruolo">                
-                <input type="text" id="altro-ruolo" name="altro-ruolo" placeholder="Aggiungi il tuo ruolo" value="" />
+                <input type="text" id="altro-ruolo" name="altro-ruolo" placeholder="<?php echo $this->languageController->getTranslation('add-role') ?>" value="" />
             </div>
             <div class="clear"></div>
             <div class="doppio clear">
-                <?php echo $this->printRegioniProvince('Dove cerchi occupazione ?'); ?>
+                <?php echo $this->printRegioniProvince($this->languageController->getTranslation('occupation')); ?>
             </div>
             <div class="clear"></div>
             <div class="field clear">
-                <label for="carica-cv">Carica il CV* </label>
+                <label for="carica-cv"><?php echo $this->languageController->getTranslation('upload-cv') ?>* </label>
                 <input type="hidden" name="MAX_FILE_SIZE" value="4194304" /> 
                 <input id="carica-cv" name="carica-cv" type="file" required>
             </div>
             <div class="clear"></div>
+            <div class="field">
+                <input name="privacy" type="checkbox" value="1" required/> <?php echo $this->languageController->getTranslation('accept-privacy') ?>
+            </div>
+            <div class="clear"></div>
             <div class="submit-button clear">
-                <input type="submit" name="invia-cv" value="Invia Curriculum" />
+                <input type="submit" name="invia-cv" value="<?php echo $this->languageController->getTranslation('send-cv') ?>" />
             </div>
             <div class="clear"></div>
         </form>
@@ -259,7 +265,7 @@ class WriterCV {
         $html = '<div class="title">'.$title.'</div>'
                 . '<div id="container-regione">'
                 . '<div class="field">'
-                . '<label for="regione">Regione</label>'
+                . '<label for="regione">'.$this->languageController->getTranslation('region').'</label>'
                 . '<select id="regione" name="regione">'
                 . '<option value=""></option>';
 
@@ -272,7 +278,7 @@ class WriterCV {
         $html.= '</select></div></div>';
         
         //ottengo le province mediante chiamata ajax
-        $html.= '<div class="field"><label for="provincia">Provincia</label>'
+        $html.= '<div class="field"><label for="provincia">'.$this->languageController->getTranslation('province').'</label>'
                 . '<div id="container-province"></div></div>';
         
         return $html;        
@@ -305,7 +311,7 @@ class WriterCV {
                     //pulisco
                     jQuery('#contenitore-selettore-ruoli').html("");
                     
-                    var html = '<label for="ruolo">Seleziona Ruolo</label>';
+                    var html = '<label for="ruolo"><?php echo $this->languageController->getTranslation('select-role') ?></label>';
                     if(data.length > 0){
                         html += '<select id="ruolo" name="ruolo">';
                         html += '<option value=""></option>';
@@ -315,7 +321,7 @@ class WriterCV {
                         html+= '</select>';
                     }
                     else{
-                        html += '<div class="no-result">Nessun ruolo presente.</div>';
+                        html += '<div class="no-result"><?php echo $this->languageController->getTranslation('no-role') ?></div>';
                     }
                     
                     jQuery('#contenitore-selettore-ruoli').append(html);
