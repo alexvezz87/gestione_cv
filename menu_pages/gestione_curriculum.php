@@ -18,7 +18,7 @@ $printer = new WriterCV();
 <?php echo $printer->printUltimiCVsPubblicati() ?>
 
 <h3>Ricerca</h3>
-<div id="ricerca-cv">
+<div id="ricerca-cv">    
     <form name="form-ricerca-cv" action="<?php echo curPageURL() ?>#risultati-cv" method="POST">
         <div class="field">
             <label for="ricerca-nome">Nome</label>
@@ -61,5 +61,5 @@ $printer = new WriterCV();
 </div>
 
 <div id="risultati-cv">
-   <?php echo $printer->listenerSearchCV() ?> 
+   <?php echo $printer->listenerSearchCV('admin') ?> 
 </div>

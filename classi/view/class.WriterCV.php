@@ -253,6 +253,14 @@ class WriterCV {
             </div>
             <div class="clear"></div>
         </form>
+        
+         <script type="text/javascript">
+             jQuery(document).ready(function($){
+                if($('#motore-ricerca').size() > 0){
+                    $('#motore-ricerca').hide();
+                } 
+             });
+         </script>
     <?php   
         //stampo le call Ajax delle select5
         $this->printAjaxCallRegioniProvince();
@@ -795,7 +803,7 @@ class WriterCV {
         }
     }
     
-    public function listenerSearchCV(){
+    public function listenerSearchCV($role){
         //qua risiede l'ascoltatore della ricerca dei CV
         if(isset($_POST['ricerca-cv'])){
                         
@@ -832,9 +840,64 @@ class WriterCV {
             $param['ordine'] = 'id';
             
             //stampo il risultato
-            $this->printCVs($this->cvController->getCVsByParameters($param));
+            if($role == 'admin'){
+                $this->printCVs($this->cvController->getCVsByParameters($param));
+            }
+            else{
+                $this->printUserCVs($this->cvController->getCVsByParameters($param));
+            }
             
         }
+    }
+    
+    public function printUserSearchBox($categoria){
+    ?>
+         <h3>Ricerca</h3>
+        <div id="ricerca-cv">
+           
+            <form name="form-ricerca-cv" action="<?php echo curPageURL() ?>#risultati-cv" method="POST">                
+               
+                <?php echo $this->printRegioniProvince('') ?>        
+                
+                                
+                    <div id="contenitore-selettore-ruoli" class="field">
+                        <input type="hidden" name="ricerca-categoria" value="<?php echo $categoria ?>" />
+                        <label for="ruolo">Ruolo</label>
+                        <select id="ruolo" name="ruolo">
+                              <option value=""></option>
+                    <?php 
+                        //ottengo i ruoli pubblicati non da chiamata ajax
+                        $ruoli = $this->ruoloController->getRuoliByCategory($categoria, 1);
+                        if(count($ruoli > 0)){                   
+                            foreach($ruoli as $ruolo){
+                    ?>
+                                <option value="<?php echo $ruolo['id'] ?>"><?php echo $ruolo['nome'] ?></option>                            
+                    <?php
+                            }                   
+                        }
+                        else {
+                            //non ci sono ruoli pubblicati                   
+                        }
+                    ?>
+                             </select>
+                    </div>
+                          
+                <div class="clear"></div>
+                <div class="ricerca field">
+                    <input type="submit" value="Ricerca" name="ricerca-cv" />
+                </div>
+                <div class="clear"></div>
+            </form>
+
+            <?php echo $this->printAjaxCallRegioniProvince() ?>           
+
+        </div>
+
+        <div id="risultati-cv">
+           <?php echo $this->listenerSearchCV('user') ?> 
+        </div>
+        
+    <?php    
     }
     
 }

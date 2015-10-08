@@ -9,18 +9,18 @@ and open the template in the editor.
 */
 
 
-#inserimento-cv {
+#inserimento-cv, #ricerca-cv {
     padding:15px;
     background: #EEE none repeat scroll 0% 0%;
 }
 
 
-#inserimento-cv {
+#inserimento-cv, #ricerca-cv {
     width:95%;
     margin:auto;
 }
 
-#inserimento-cv .field{
+#inserimento-cv .field, #ricerca-cv .field{
     float:left;
     width: 32%;
     height: auto;
@@ -30,7 +30,7 @@ and open the template in the editor.
     margin-bottom: 10px;
 }
 
-#inserimento-cv .field input[type=text], #inserimento-cv .field input[type=email], #inserimento-cv .field select{
+#inserimento-cv .field input[type=text], #inserimento-cv .field input[type=email], #inserimento-cv .field select, #ricerca-cv .field select{
     height: 38px;
     border-width: medium medium 1px !important;
     border-style: none none solid !important;
@@ -44,7 +44,7 @@ and open the template in the editor.
      width: 80%;
 }
 
-#inserimento-cv .field select{
+#inserimento-cv .field select, #ricerca-cv .field select{
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
@@ -56,14 +56,14 @@ and open the template in the editor.
     padding-top:10px;
 }
 
-#inserimento-cv input[type=submit]{
+#inserimento-cv input[type=submit], #ricerca-cv input[type=submit]{
     background: #27AE60;
     text-transform: uppercase;
     font-size:20px;
 }
 
 
-#inserimento-cv .field label{
+#inserimento-cv .field label, #ricerca-cv .field label{
     display:block;
     font-weight: bold;
 }
@@ -74,7 +74,7 @@ and open the template in the editor.
    
 }
 
-#inserimento-cv .submit-button {
+#inserimento-cv .submit-button, #ricerca-cv .submit-button{
     margin-top:25px;
     float:right;
 }

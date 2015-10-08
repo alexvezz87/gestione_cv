@@ -46,48 +46,51 @@ if($user_ID != 0){
            //location['cod_regione'] --> REGIONE
            //location['cod_provincia'] --> PROVINCIA
            
-           
-           //I parametri indispensabili sono quelli ottenuti
-           //Ho 3 query da fare.
-           //1. Query specifica di Location --> regione e provincia
-           //2. Query specifica di Location --> solo regione
-           //3. Query non specifica di Location
-           //Al termine mergiare i risultati ottenuti 
+           $printer->printUserSearchBox($categoria);
            
            
-           $param_1 = array();
-           $param_1['categoria'] = $categoria;
-           $param_1['regione'] = $location['cod_regione'];
-           $param_1['provincia'] = $location['cod_provincia'];
-           $param_1['pubblicato'] = 1;
-           $param_1['ordine'] = 'provincia, ruolo';
-           $result_1 = $cvController->getCVsByParameters($param_1);
+            if(!isset($_POST['ricerca-cv'])){
            
-           $param_2 = array();
-           $param_2['categoria'] = $categoria;
-           $param_2['regione'] = $location['cod_regione'];  
-           $param_2['pubblicato'] = 1;
-           $param_2['ordine'] = 'ruolo';
-           $result_2 = $cvController->getCVsByParameters($param_2);
-                    
-           $param_3 = array();
-           $param_3['categoria'] = $categoria; 
-           $param_3['pubblicato'] = 1;
-           $param_3['ordine'] = 'ruolo';
-           $result_3 = $cvController->getCVsByParameters($param_3);           
-          
-           $result = array_unique(array_merge($result_1, $result_2, $result_3), SORT_REGULAR);
-                    
-           if(count($result > 0)){
-               $printer->printUserCVs($result);
-           }
-           else{
-               
-               echo 'non ci sono curriculum da visualizzare';
-           }
+                //I parametri indispensabili sono quelli ottenuti
+                //Ho 3 query da fare.
+                //1. Query specifica di Location --> regione e provincia
+                //2. Query specifica di Location --> solo regione
+                //3. Query non specifica di Location
+                //Al termine mergiare i risultati ottenuti 
+
+
+                $param_1 = array();
+                $param_1['categoria'] = $categoria;
+                $param_1['regione'] = $location['cod_regione'];
+                $param_1['provincia'] = $location['cod_provincia'];
+                $param_1['pubblicato'] = 1;
+                $param_1['ordine'] = 'provincia, ruolo';
+                $result_1 = $cvController->getCVsByParameters($param_1);
+
+                $param_2 = array();
+                $param_2['categoria'] = $categoria;
+                $param_2['regione'] = $location['cod_regione'];  
+                $param_2['pubblicato'] = 1;
+                $param_2['ordine'] = 'ruolo';
+                $result_2 = $cvController->getCVsByParameters($param_2);
+
+                $param_3 = array();
+                $param_3['categoria'] = $categoria; 
+                $param_3['pubblicato'] = 1;
+                $param_3['ordine'] = 'ruolo';
+                $result_3 = $cvController->getCVsByParameters($param_3);           
+
+                $result = array_unique(array_merge($result_1, $result_2, $result_3), SORT_REGULAR);
+
+                if(count($result > 0)){
+                    $printer->printUserCVs($result);
+                }
+                else{
+
+                    echo 'non ci sono curriculum da visualizzare';
+                }           
            
-           
-           
+            }
            
            
        }
@@ -125,3 +128,11 @@ else {
 } 
 
 ?>
+
+<script type="text/javascript">
+    jQuery(document).ready(function($){
+       if($('#motore-ricerca').size() > 0){
+           $('#motore-ricerca').hide();
+       } 
+    });
+</script>
