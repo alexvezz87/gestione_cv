@@ -69,7 +69,13 @@ function getLanIT(){
   $lan['send-cv'] = 'Invia Curriculum';
   $lan['select-role'] = 'Seleziona Ruolo';
   $lan['no-role'] = 'Nessun ruolo presente.';
-            
+  //confirmation-email
+  $lan['email-save-title-user'] = 'The Work Note - Registrazione Curriculum Vitae';
+  $lan['email-save-title-admin'] = 'Nuovo Curriculum caricato';
+  $lan['msg-save-email-user'] = '<h3>Curriculum correttamente registrato</h3>Gentile utente il suo curriculum è stato correttamente registrato all\'interno del nostro sistema. <br><br> Cordiali Saluti<br>The Work Note';
+  $lan['msg-save-email-admin'] = 'Un nuovo curriculum è stato caricato nel sistema';
+  $lan['msg-save-email-admin-cv-to-approve'] = 'Un nuovo curriculum è stato caricato nel sistema ed ha bisogno di essere approvato';
+  
   return $lan; 
 }
 
@@ -90,6 +96,12 @@ function getLanEN(){
   $lan['send-cv'] = 'Send your Curriculum';
   $lan['select-role'] = 'Select Role';
   $lan['no-role'] = 'No role found.';
+   //confirmation-email
+  $lan['email-save-title-user'] = 'The Work Note - Registration Curriculum Vitae';
+  $lan['email-save-title-admin'] = 'New Curriculum uploaded';
+  $lan['msg-save-email-user'] = '<h3>Curriculum properly registered</h3>Dear User his curriculum was correctly registered in our system.<br><br>Best Regards<br>The Work Note';
+  $lan['msg-save-email-admin'] = 'A new curriculum has been loaded into the system';
+  $lan['msg-save-email-admin-cv-to-approve'] = 'A new curriculum has been loaded into the system and needs to be approved';
   
   return $lan; 
 }

@@ -14,9 +14,11 @@
  */
 class CvController {
     private $DAO;
+    private $language;
     
     public function __construct() {
         $this->DAO = new CvDAO();
+        $this->language = new LanguageController();
     }
     
     /**
@@ -30,6 +32,9 @@ class CvController {
         if($this->DAO->isCvAlreadyInDB($cv) == false){
             //se il cv non è presente, lo salvo
             if($this->DAO->saveCV($cv) == true){
+                //invio le mail
+                $this->sendConfirmEmail('user', $cv);
+                $this->sendConfirmEmail('admin', $cv);
                 return 1;
             }
         }
@@ -37,6 +42,9 @@ class CvController {
             //altrimenti faccio l'update
             $idCV = $this->DAO->getCvID($cv);
             if($this->DAO->updateCV($cv, $idCV)){
+                //invio le mail
+                $this->sendConfirmEmail('user', $cv);
+                $this->sendConfirmEmail('admin', $cv);
                 return 2;
             }
         }
@@ -139,6 +147,50 @@ class CvController {
     public function getCvById($idCV){
         $temp = $this->DAO->getCvById($idCV);
         return $this->fromQueryResultToCv($temp);
+    }
+    
+    /**
+     * Funzione che invia una mail di conferma
+     */
+    function sendConfirmEmail($type, CV $cv){
+        //type identifica il tipo di mail da spedire
+        //type == 'user' --> Invia una mail di conferma all'utente
+        //type == 'admin' --> invia una mail di notifica all'amministratore
+        
+        $msg = '';
+        $title = '';
+        $email = '';
+        
+        switch($type){
+            case 'user':                
+                $email = $cv->getEmail();
+                $title = $this->language->getTranslation('email-save-title-user');
+                $msg = $this->language->getTranslation('msg-save-email-user');
+                
+                break;
+            
+            case 'admin':
+                $email = get_option('admin_email');
+                $title = $this->language->getTranslation('email-save-title-admin').' - '.$cv->getCognome().' '.$cv->getNome();
+                if($cv->getPubblicato() == 0){
+                    $msg = $this->language->getTranslation('msg-save-email-admin-cv-to-approve');
+                }
+                else{
+                    $msg = $this->language->getTranslation('msg-save-email-admin');
+                }                
+                break;
+        }
+        try{
+            //aggiungo il filtro per l'html sulla mail
+            add_filter('wp_mail_content_type',create_function('', 'return "text/html"; '));
+            //invio la mail
+            wp_mail($email, $title, $msg);
+            return true;
+        }
+        catch(Exception $ex){
+            _e($ex);
+            return false;
+        }
     }
 }
 
