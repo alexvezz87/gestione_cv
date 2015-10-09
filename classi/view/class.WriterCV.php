@@ -419,6 +419,7 @@ class WriterCV {
                 $cv->setPubblicato(1);       
                 //aggiorno il ruolo
                 if($this->cvController->updateCV($cv, $idCV)){
+                    $this->cvController->sendConfirmEmail('update', $cv);
                     echo '<div class="ok">Il cv è stato pubblicato.</div>';
                 }
                 else{

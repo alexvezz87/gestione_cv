@@ -152,7 +152,7 @@ class CvController {
     /**
      * Funzione che invia una mail di conferma
      */
-    function sendConfirmEmail($type, CV $cv){
+    public function sendConfirmEmail($type, CV $cv){
         //type identifica il tipo di mail da spedire
         //type == 'user' --> Invia una mail di conferma all'utente
         //type == 'admin' --> invia una mail di notifica all'amministratore
@@ -178,6 +178,12 @@ class CvController {
                 else{
                     $msg = $this->language->getTranslation('msg-save-email-admin');
                 }                
+                break;
+                
+            case 'update':
+                $email = $cv->getEmail();
+                $title = $this->language->getTranslation('msg-approved-email-title');
+                $msg = $this->language->getTranslation('msg-approved-email-msg');
                 break;
         }
         try{
