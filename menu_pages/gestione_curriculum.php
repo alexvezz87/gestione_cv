@@ -63,3 +63,5 @@ $printer = new WriterCV();
 <div id="risultati-cv">
    <?php echo $printer->listenerSearchCV('admin') ?> 
 </div>
+
+<?php echo $printer->listnerAdminFormCV(); ?>

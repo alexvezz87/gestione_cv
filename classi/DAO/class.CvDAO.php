@@ -231,8 +231,7 @@ class CvDAO {
      * @return boolean
      */
     public function updateCV(CV $cv, $idCV){
-        try{
-            
+        try{            
             //imposto il timezone
             date_default_timezone_set('Europe/Rome');
             $timestamp = date('Y-m-d H:i:s', strtotime("now")); 

@@ -123,14 +123,9 @@ class CvController {
      * @param CV $cv
      * @return boolean
      */
-    public function updateCV(CV $cv, $idCV){
-        //ottengo il ruolo dall'ID
-        $temp = new CV();
-        $temp = $this->fromQueryResultToCv($this->DAO->getCvById($idCV));       
-        //dal cv si può modificare solo lo stato di pubblicato        
-        $temp->setPubblicato($cv->getPubblicato());
-        
-        if($this->DAO->updateCV($temp, $idCV) == true){
+    public function updateCV(CV $cv, $idCV){          
+       
+        if($this->DAO->updateCV($cv, $idCV) == true){
             return true;
         }
         return false;

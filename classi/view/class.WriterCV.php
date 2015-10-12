@@ -88,10 +88,11 @@ class WriterCV {
         }
     }
     
-    function uploadCvOnFileSystem($file, $folder){
+    function uploadCvOnFileSystem($file, $folder, $newNameFile){
         //print_r($file);
+       
         if($file['error'] == UPLOAD_ERR_OK and is_uploaded_file($file['tmp_name'])){
-            if(move_uploaded_file($file['tmp_name'],$folder.'/'.$file['name'])){
+            if(move_uploaded_file($file['tmp_name'], $folder.'/'.$newNameFile.'.'.$extension)){
                 return true;
             }
         }
@@ -117,7 +118,18 @@ class WriterCV {
                 //controllo se il path esiste
                 $this->checkFolder($folder);
                 //carico nel filesystem
-                $check_upload = $this->uploadCvOnFileSystem($_FILES['carica-cv'], $folder);              
+                
+                /*MODIFICA PER CAMBIARE IL NOME DEL FILE SALVATO */
+                $nameFile = str_replace('.', '-', strip_tags(trim($_POST['email'])));
+                $nameFile .= '-'.strip_tags($_POST['categoria']);               
+                 //ottengo l'estensione del file
+                $temp = explode('.', $_FILES['carica-cv']['name']);
+                $extension = $temp[count($temp)-1];
+                $nameFile.='.'.$extension;                
+                
+                /*FINE MODIFICA */
+                
+                $check_upload = $this->uploadCvOnFileSystem($_FILES['carica-cv'], $folder, $nameFile);              
                 
                 if($check_upload){
                     //se l'upload è avvenuto correttamente, salvo i dati nel database
@@ -125,7 +137,7 @@ class WriterCV {
                     //campi obbligatori
                     $cv->setCategoria(strip_tags($_POST['categoria']));
                     $cv->setCognome(strip_tags(trim($_POST['cognome'])));
-                    $cv->setCv($folder.'/'.$_FILES['carica-cv']['name']);
+                    $cv->setCv($folder.'/'.$nameFile);
                     $cv->setEmail(strip_tags(trim($_POST['email'])));
                     $cv->setNome(strip_tags(trim($_POST['nome'])));
                     //campi non obbligatori
@@ -441,6 +453,21 @@ class WriterCV {
             
             unset($_POST['idCV']);
         }
+        
+        //Listener di aggiorna CV
+        if(isset($_POST['aggiorna-cv'])){
+            //ottengo in questo caso il valore di idRuolo da salvare e aggiornare il cv
+            
+            $idCv = $_POST['idCV'];
+            $idRuolo = $_POST['idRuolo'];
+            //ottengo l'oggetto cv 
+            $cv = $this->cvController->getCvById($idCv);
+            //setto il nuovo ruolo
+            $cv->setRuolo($idRuolo);
+            //aggiorno il cv
+            $this->cvController->updateCV($cv, $idCv);
+        }
+        
     }
     
     public function listenerAdminRuoli(){        
@@ -667,13 +694,17 @@ class WriterCV {
                     <td><?php /* nome */ echo $cv->nome ?></td>
                     <td><?php /* email */ echo $cv->email ?></td>
                     <td><?php /* nome categoria */ echo getNomeCategoriaById($cv->categoria) ?></td>
-                    <td><?php /* nome ruolo */ echo $nomeRuolo ?></td>
+                    <td><div style="display:none" class="select-ruolo" id="col-ruolo-<?php echo $cv->ID ?>"></div><div id="col-nome-ruolo-<?php echo $cv->ID ?>" class="nome-ruolo"><?php /* nome ruolo */ echo $nomeRuolo ?></div></td>
                     <td><?php /* nome regione e provincia */ echo $location ?></td>
                     <td><a target="_blank" href="<?php echo get_home_url().'/'.$cv->cv ?>">Apri il CV</a></td>
                     <td><?php echo $this->printStatoCV($cv) ?></td>
                     <td>
-                        <form action="<?php echo curPageURL() ?>" name="modifica-cv" method="POST">
+                        <form action="<?php echo curPageURL() ?>" name="modifica-cv" class="modifica-cv" method="POST">
                             <input type="hidden" name="idCV" value="<?php echo $cv->ID ?>" /> 
+                            <input type="hidden" name="idCat" value="<?php echo $cv->categoria ?>" />
+                            <input type="hidden" name="idRuolo" class="idRuolo" data-cv="<?php echo $cv->ID ?>" value="<?php echo $cv->ruolo ?>" />
+                            <input type="button" name="modifica-cv" value="Modifica" />
+                            <input style="display:none" type="submit" name="aggiorna-cv" value="Aggiorna">
                             <input type="submit" name="elimina-cv" value="Elimina">
                         </form>
                     </td>
@@ -682,12 +713,78 @@ class WriterCV {
             }
 ?>
             </tbody>
-        </table>
+        </table>        
+       
 <?php
         }
         else{
             echo 'Non ci sono curriculum per questa voce';
         }
+    }
+    
+    
+    public function listnerAdminFormCV(){
+?>
+      <script type="text/javascript">
+          jQuery(document).ready(function($){              
+              $('.modifica-cv input[name=modifica-cv]').click(function(){
+                //attivo l'ultimo che ho cliccato
+                //ottengo tutti gli elementi
+                $('.modifica-cv input[name=modifica-cv]').show();
+                $('.modifica-cv input[name=aggiorna-cv]').hide();
+                $('.select-ruolo').hide();
+                $('.nome-ruolo').show();
+                //ottengo gli id (cv e categoria)
+                var idCv = $(this).siblings('input[name=idCV]').val();
+                var idCat = $(this).siblings('input[name=idCat]').val();
+                var idRuolo = $(this).siblings('.idRuolo').val();
+                //devo sostituire il bottone modifica con aggiorna
+                $(this).siblings('input[name=aggiorna-cv]').show();
+                $(this).hide();
+                //chiamata ajax per ottenere la lista dei ruoli per l'id categoria passato
+                jQuery.post('<?php echo plugins_url().'/gestione_cv/ajax/ajax_call.php' ?>', {id_categoria: idCat}, function(data){printRuoli2(idCv, idRuolo, data);}, 'json');
+                //ascoltatore sulla select del ruolo
+                jQuery(document).on('change', 'select[name=aggiorna-ruolo]',function(){                    
+                    var idNewRuolo = jQuery('select[name=aggiorna-ruolo]').val();      
+                    //devo cambiare il valore nell'input hidden associato
+                    $("input[data-cv='"+idCv+"'").val(idNewRuolo);                    
+                });
+                
+                
+              });
+              
+              function printRuoli2(idCv, idRuolo, data){
+                jQuery(function(){
+                    //pulisco
+                    jQuery('#col-ruolo-'+idCv).html("");
+                    
+                    var html = '';
+                    if(data.length > 0){
+                        html += '<select id="ruolo-'+idCv+'" name="aggiorna-ruolo">';
+                        html += '<option value=""></option>';
+                        for(var i=0; i< data.length; i++){
+                            if(data[i].id === idRuolo){
+                                html += '<option value="'+data[i].id+'" selected>'+data[i].nome+'</option>';
+                            }
+                            else{
+                                html += '<option value="'+data[i].id+'">'+data[i].nome+'</option>';
+                            }                                   
+                        }
+                        html+= '</select>';
+                    }
+                    else{
+                        html += '<div class="no-result"><?php echo $this->languageController->getTranslation('no-role') ?></div>';
+                    }
+                    
+                    jQuery('#col-ruolo-'+idCv).append(html);
+                    jQuery('#col-ruolo-'+idCv).show();
+                    jQuery('#col-nome-ruolo-'+idCv).hide();
+                });
+            }
+              
+          });
+      </script>  
+<?php
     }
     
     /**
