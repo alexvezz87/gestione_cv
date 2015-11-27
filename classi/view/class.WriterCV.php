@@ -226,7 +226,15 @@ class WriterCV {
     public function printInsertCvForm(){
         
 ?>
-        <h2><?php echo $this->languageController->getTranslation('sendCvTitle') ?></h2>
+        <!-- Testo pre form -->
+        <div class="pre-form">
+            <h2><?php echo $this->languageController->getTranslation('pre-form-upload-title') ?></h2>
+            <p>
+                <?php echo $this->languageController->getTranslation('pre-form-upload-text') ?>
+            </p>
+        </div>    
+        <!-- fine Testo pre form -->
+        <h2 class="green"><?php echo $this->languageController->getTranslation('sendCvTitle') ?></h2>
         <form id="inserimento-cv" name="inserimento-cv" action="<?php echo curPageURL() ?>" method="POST" enctype="multipart/form-data">
             <div class="field">                
                 <input type="text" id="nome" value="" name="nome" placeholder="<?php echo $this->languageController->getTranslation('name') ?>" required/>
@@ -265,6 +273,14 @@ class WriterCV {
             </div>
             <div class="clear"></div>
         </form>
+        
+        <!-- testo post form -->
+        <div class="post-form">
+            <br>
+            <a target="_blank" href="<?php echo plugins_url().'/gestione_cv/download/CVTemplate_it_IT.doc' ?>"><u><?php echo $this->languageController->getTranslation('post-form-link-cv') ?></u></a>
+            <?php echo $this->languageController->getTranslation('post-form-text') ?>
+        </div>
+        <!-- end testo post form -->
         
          <script type="text/javascript">
              jQuery(document).ready(function($){
@@ -942,6 +958,7 @@ class WriterCV {
                 $this->printCVs($this->cvController->getCVsByParameters($param));
             }
             else{
+                $param['ordine'] = 'provincia, ruolo, id';
                 $this->printUserCVs($this->cvController->getCVsByParameters($param));
             }
             
@@ -950,7 +967,7 @@ class WriterCV {
     
     public function printUserSearchBox($categoria){
     ?>
-         <h3>Ricerca</h3>
+        <h3 class="green"><?php echo $this->languageController->getTranslation('search') ?></h3>
         <div id="ricerca-cv">
            
             <form name="form-ricerca-cv" action="<?php echo curPageURL() ?>#risultati-cv" method="POST">                
@@ -960,7 +977,7 @@ class WriterCV {
                                 
                     <div id="contenitore-selettore-ruoli" class="field">
                         <input type="hidden" name="ricerca-categoria" value="<?php echo $categoria ?>" />
-                        <label for="ruolo">Ruolo</label>
+                        <label for="ruolo"><?php echo $this->languageController->getTranslation('role') ?></label>
                         <select id="ruolo" name="ruolo">
                               <option value=""></option>
                     <?php 
@@ -982,7 +999,8 @@ class WriterCV {
                           
                 <div class="clear"></div>
                 <div class="ricerca field">
-                    <input type="submit" value="Ricerca" name="ricerca-cv" />
+                    <input type="submit" value="Ricerca" name="ricerca-cv" style="float:left; margin-right: 15px" />
+                    <img src="<?php echo plugins_url() ?>/gestione_cv/images/logo-transparent.png" class="logo-image" style="max-height: 52px;" />
                 </div>
                 <div class="clear"></div>
             </form>

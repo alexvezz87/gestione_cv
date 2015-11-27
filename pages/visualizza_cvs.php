@@ -7,6 +7,7 @@
 $printer = new WriterCV();
 $locatorController = new LocatorController();
 $cvController = new CvController();
+$languageController = new LanguageController();
 
 //ottengo due info fondamentali per avere il comportamento corretto 
 //1. ID UTENTE 
@@ -40,13 +41,22 @@ if($user_ID != 0){
 
     if($categoria != null && $provincia != null){
         //si procede all'elaborazione della provincia
-       $location = $locatorController->getCodRegioneByProv($provincia);
-       if(count($location) > 0){
+        $location = $locatorController->getCodRegioneByProv($provincia);
+        if(count($location) > 0){
            //ho ottenuto la location dell'utente
            //location['cod_regione'] --> REGIONE
            //location['cod_provincia'] --> PROVINCIA
-           
-           $printer->printUserSearchBox($categoria);
+
+?>
+            <div class="pre-form">
+                <h2><?php echo $languageController->getTranslation('find-cv-title')  ?></h2>
+                <p><?php echo $languageController->getTranslation('find-cv-text') ?></p>
+                <h4><?php echo $languageController->getTranslation('how-it-works-title') ?></h4>
+                <p><?php echo $languageController->getTranslation('how-it-works-text') ?></p>
+                
+            </div>
+<?php
+            $printer->printUserSearchBox($categoria);
            
            
             if(!isset($_POST['ricerca-cv'])){
@@ -86,44 +96,40 @@ if($user_ID != 0){
                     $printer->printUserCVs($result);
                 }
                 else{
-
-                    echo 'non ci sono curriculum da visualizzare';
+                    echo $languageController->getTranslation('no-curriculum-to-show');
                 }           
            
             }
            
            
-       }
-       else{
+        }
+        else{
            //non ho ottenuto la location dell'utente, questo vuol dire che ha scritto male la provincia o non compare nella tabella delle province
            //Bisogna invitare l'utente a selezionare una provincia esistente e aggiornare il suo campo provincia nella famiglia Indirizzo.
-           echo 'Il sistema non è riuscito ad identificare la tua provincia di appartenenza.';
-           echo '<br>';
-           echo 'Ti suggeriamo di aggiornarla con i nostri suggerimenti.';
+           echo $languageController->getTranslation('no-identification-province');
           
            echo '<form action="'.curPageURL().'" method="POST">';
            echo '<input type="hidden" name="id-utente" value="'.$user_ID.'" />';
-           echo $printer->printRegioniProvince('Scegli regione e provincia.');
+           echo $printer->printRegioniProvince($languageController->getTranslation('select-region-province'));
            $printer->printAjaxCallRegioniProvince();
-           echo '<input type="submit" name="aggiorna-provincia" value="Aggiorna provincia">';
+           echo '<input type="submit" name="aggiorna-provincia" value="'.$languageController->getTranslation('update-province').'">';
            echo '</form>';
-       }
-        
+        }        
         
         
     }
     else if($provincia == null){
         //Invito all'utente di compilare i campi indirizzo
         $current_user = wp_get_current_user();
-        echo 'Il tuo profilo non è completo. Per usufruire di questa funzionalità ti chiediamo di completare la profilazione aggiungendo l\'indirizzo della tua attività.<br>';
-        echo '<a class="modifica-profilo" href="'.get_home_url().'/members/'.$current_user->user_login.'/profile/edit/group/2/">Completa indirizzo</a>';
+        echo $languageController->getTranslation('profile-not-complete');
+        echo '<a class="modifica-profilo" href="'.get_home_url().'/members/'.$current_user->user_login.'/profile/edit/group/2/">'.$languageController->getTranslation('complete-address').'</a>';
     }
 
 }
 else {
     //utente non registrato
 
-    echo 'utente non registrato!';
+    echo $languageController->getTranslation('user-not-registered');
 
 } 
 
