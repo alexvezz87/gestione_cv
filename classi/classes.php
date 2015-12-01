@@ -7,15 +7,18 @@
 
 require_once 'model/class.CV.php';
 require_once 'model/class.Ruolo.php';
+require_once 'model/class.Traduzione.php';
 
 require_once 'DAO/class.CvDAO.php';
 require_once 'DAO/class.RuoloDAO.php';
 require_once 'DAO/class.LocatorDAO.php';
+require_once 'DAO/class.TraduzioneDAO.php';
 
 require_once 'controller/class.CvController.php';
 require_once 'controller/class.RuoloController.php';
 require_once 'controller/class.LocatorController.php';
 require_once 'controller/class.LanguageController.php';
+require_once 'controller/class.TraduzioneController.php';
 
 require_once 'view/class.WriterCV.php';
 

@@ -60,6 +60,7 @@ function print_show_cvs(){
 function add_admin_menu(){
     add_menu_page('Gestione CV', 'Gestione CV', 'administrator', 'gestione_cv', 'add_admin_page', plugins_url('images/icona_20x28.png', __FILE__), 9);
     add_submenu_page('gestione_cv', 'Gestione Ruoli', 'Gestione Ruoli', 'administrator', 'gestione_ruoli', 'add_pagina_gestione_ruoli');
+    add_submenu_page('gestione_cv', 'Gestione Traduzioni', 'Gestione Traduzioni', 'administrator', 'gestione_traduzioni', 'add_pagina_gestione_traduzioni');
 }
 
 function add_admin_page(){
@@ -68,6 +69,11 @@ function add_admin_page(){
 
 function add_pagina_gestione_ruoli(){
     include 'menu_pages/gestione_ruoli.php';
+}
+
+
+function add_pagina_gestione_traduzioni(){
+    include 'menu_pages/gestione_traduzioni.php';
 }
 
 add_action('admin_menu', 'add_admin_menu');

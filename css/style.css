@@ -114,3 +114,8 @@ and open the template in the editor.
 }
 
 #risultati-cv {margin-top:30px;}
+
+.pre-form p, .post-form p, .post-form ul {color:#555}
+.pre-form h2, .pre-form h4, h3.green, h2.green, .post-form h2, #ricerca-cv label, #inserimento-cv label, #inserimento-cv .title, .table-cvs thead td {color: rgb(47, 103, 42)}
+
+.logo-image {max-height: 52px}

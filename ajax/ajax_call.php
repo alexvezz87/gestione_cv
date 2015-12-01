@@ -4,8 +4,8 @@
 //url: http://www.alexsoluzioniweb.it/
 
 //da cambiare
-$temp__path = ""; //PRODUZIONE
-//$temp_path = "/in_elaborazione/TheWorkNote/wordpress/"; //LOCALE
+//$temp__path = ""; //PRODUZIONE
+$temp_path = "/in_elaborazione/TheWorkNote/wordpress/"; //LOCALE
 //$temp_path = "/progetti/twn"; //STAGE
 
 

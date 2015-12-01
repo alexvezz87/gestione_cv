@@ -104,3 +104,11 @@ and open the template in the editor.
     width:150px;
     height:50px;
 }
+
+.table-traduzioni {
+    width:90%;
+}
+
+.table-traduzioni input {
+    width:75%;
+}
