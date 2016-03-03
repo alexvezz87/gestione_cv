@@ -227,58 +227,84 @@ class WriterCV {
         
 ?>
         <!-- Testo pre form -->
-        <div class="pre-form">
-            <h2><?php echo $this->languageController->getTranslation('pre-form-upload-title') ?></h2>
-            <p>
-                <?php echo $this->languageController->getTranslation('pre-form-upload-text') ?>
-            </p>
-        </div>    
+        <div class="container-pre-form">
+            <div class="pre-form container-1024">
+                <h2 class="col-xs-12"><?php echo $this->languageController->getTranslation('pre-form-upload-title') ?></h2>
+                <p class="col-xs-12">
+                    <?php echo $this->languageController->getTranslation('pre-form-upload-text') ?>
+                </p>
+                <div class="clear"></div>
+            </div>    
+        </div>
         <!-- fine Testo pre form -->
-        <h2 class="green"><?php echo $this->languageController->getTranslation('sendCvTitle') ?></h2>
-        <form id="inserimento-cv" name="inserimento-cv" action="<?php echo curPageURL() ?>" method="POST" enctype="multipart/form-data">
-            <div class="field">                
-                <input type="text" id="nome" value="" name="nome" placeholder="<?php echo $this->languageController->getTranslation('name') ?>" required/>
+        
+        <div class="container-title">
+            <div class="container-1024">
+                <h2 class="col-xs-12"><?php echo $this->languageController->getTranslation('sendCvTitle') ?></h2>
+                <div class="clear"></div>
             </div>
-            <div class="field">               
-                <input type="text" id="cognome" value="" name="cognome" placeholder="<?php echo $this->languageController->getTranslation('surname') ?>" required/>
+        </div>
+        
+        <div class="container-form">
+            <div class="container-1024">
+                <form id="inserimento-cv" name="inserimento-cv" action="<?php echo curPageURL() ?>" method="POST" enctype="multipart/form-data">
+                    <div class="field col-xs-12 col-sm-6">                
+                        <input type="text" id="nome" value="" name="nome" placeholder="<?php echo $this->languageController->getTranslation('name') ?>" required/>
+                    </div>
+                    <div class="field col-xs-12 col-sm-6">               
+                        <input type="text" id="cognome" value="" name="cognome" placeholder="<?php echo $this->languageController->getTranslation('surname') ?>" required/>
+                    </div>
+                    <div class="field col-xs-12">                
+                        <input type="email" id="email" name="email" value="" placeholder="<?php echo $this->languageController->getTranslation('email') ?>" required/>
+                    </div>
+                    <div class="field col-xs-12 col-sm-4">
+                        <label for="select-categoria"><?php echo $this->languageController->getTranslation('category') ?>* </label>
+                        <?php echo getSelectCategoriaCommerciale();  ?>
+                    </div>
+                    <div id="contenitore-selettore-ruoli" class="field col-xs-12 col-sm-8"></div>
+                    <div class="field add-ruolo col-xs-12">                
+                        <input type="text" id="altro-ruolo" name="altro-ruolo" placeholder="<?php echo $this->languageController->getTranslation('add-role') ?>" value="" />
+                    </div>
+                    <div class="clear"></div>
+                    <div class="doppio clear">
+                        <?php echo $this->printRegioniProvince($this->languageController->getTranslation('occupation')); ?>
+                    </div>
+                    <div class="clear"></div>
+                    <div class="field clear col-xs-12 col-sm-8 invia-curriculum">
+                        <div class="image-curriculum"></div>
+                        <label for="carica-cv"><?php echo $this->languageController->getTranslation('upload-cv') ?>* </label>
+                        
+                            <input type="hidden" name="MAX_FILE_SIZE" value="4194304" /> 
+                            <input id="carica-cv" name="carica-cv" type="file" required>
+                           
+                    </div>
+                    
+                    <div class="field col-xs-12 col-sm-4 privacy-field">
+                        <input name="privacy" type="checkbox" value="1" required/> <?php echo $this->languageController->getTranslation('accept-privacy') ?>
+                    </div>
+                    <div class="clear"></div>
+                    <div class="submit-button clear col-xs-12">
+                        <input type="submit" name="invia-cv" value="<?php echo $this->languageController->getTranslation('send-cv') ?>" />
+                    </div>
+                    <div class="clear"></div>
+                </form>
             </div>
-            <div class="field">                
-                <input type="email" id="email" name="email" value="" placeholder="<?php echo $this->languageController->getTranslation('email') ?>" required/>
-            </div>
-            <div class="field">
-                <label for="select-categoria"><?php echo $this->languageController->getTranslation('category') ?>* </label>
-                <?php echo getSelectCategoriaCommerciale();  ?>
-            </div>
-            <div id="contenitore-selettore-ruoli" class="field"></div>
-            <div class="field add-ruolo">                
-                <input type="text" id="altro-ruolo" name="altro-ruolo" placeholder="<?php echo $this->languageController->getTranslation('add-role') ?>" value="" />
-            </div>
-            <div class="clear"></div>
-            <div class="doppio clear">
-                <?php echo $this->printRegioniProvince($this->languageController->getTranslation('occupation')); ?>
-            </div>
-            <div class="clear"></div>
-            <div class="field clear">
-                <label for="carica-cv"><?php echo $this->languageController->getTranslation('upload-cv') ?>* </label>
-                <input type="hidden" name="MAX_FILE_SIZE" value="4194304" /> 
-                <input id="carica-cv" name="carica-cv" type="file" required>
-            </div>
-            <div class="clear"></div>
-            <div class="field">
-                <input name="privacy" type="checkbox" value="1" required/> <?php echo $this->languageController->getTranslation('accept-privacy') ?>
-            </div>
-            <div class="clear"></div>
-            <div class="submit-button clear">
-                <input type="submit" name="invia-cv" value="<?php echo $this->languageController->getTranslation('send-cv') ?>" />
-            </div>
-            <div class="clear"></div>
-        </form>
+        </div>
         
         <!-- testo post form -->
-        <div class="post-form">
-            <br>
-            <a target="_blank" href="<?php echo plugins_url().'/gestione_cv/download/CVTemplate_it_IT.doc' ?>"><u><?php echo $this->languageController->getTranslation('post-form-link-cv') ?></u></a>
-            <?php echo $this->languageController->getTranslation('post-form-text') ?>
+        <div clasS="container-post-form">
+            <div class="container-1024">
+                <div class="post-form">
+                    <div class="hidden-xs img-componi-curriculum"></div>
+                    <p class="link col-xs-6"><?php echo $this->languageController->getTranslation('post-form-link-cv') ?></p> 
+                    <a class="button-link col-xs-6" target="_blank" href="<?php echo plugins_url().'/gestione_cv/download/CVTemplate_it_IT.doc' ?>">DOWNLOAD</a>
+                    <div class="clear"></div>
+                    <div class="col-xs-12 description-cv">
+                        <?php echo $this->languageController->getTranslation('post-form-text') ?>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
         </div>
         <!-- end testo post form -->
         
@@ -298,8 +324,8 @@ class WriterCV {
   
     function printRegioniProvince($title){
         
-        $html = '<div class="title">'.$title.'</div>'
-                . '<div id="container-regione">'
+        $html = '<div class="title col-xs-12">'.$title.'</div>'
+                . '<div id="container-regione" class="container-regione col-xs-12 col-sm-6">'
                 . '<div class="field">'
                 . '<label for="regione">'.$this->languageController->getTranslation('region').'</label>'
                 . '<select id="regione" name="regione">'
@@ -314,7 +340,7 @@ class WriterCV {
         $html.= '</select></div></div>';
         
         //ottengo le province mediante chiamata ajax
-        $html.= '<div class="field"><label for="provincia">'.$this->languageController->getTranslation('province').'</label>'
+        $html.= '<div class="field container-provincia col-xs-12 col-sm-6"><label for="provincia">'.$this->languageController->getTranslation('province').'</label>'
                 . '<div id="container-province"></div></div>';
         
         return $html;        

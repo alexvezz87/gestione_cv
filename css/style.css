@@ -9,84 +9,139 @@ and open the template in the editor.
 */
 
 
-#inserimento-cv, #ricerca-cv {
-    padding:15px;
-    background: #EEE none repeat scroll 0% 0%;
+.invia-cv .container-form{
+    width:100%;
+    background:#e2e2e2;
+    padding-top:35px;
+    padding-bottom:35px;
 }
 
-
-#inserimento-cv, #ricerca-cv {
-    width:95%;
-    margin:auto;
-}
-
-#inserimento-cv .field, #ricerca-cv .field{
-    float:left;
-    width: 32%;
-    height: auto;
-    margin-right:10px;
-    margin-top:20px;
-    font-size:13px;
-    margin-bottom: 10px;
-}
-
-#inserimento-cv .field input[type=text], #inserimento-cv .field input[type=email], #inserimento-cv .field select, #ricerca-cv .field select{
-    height: 38px;
-    border-width: medium medium 1px !important;
-    border-style: none none solid !important;
-    border-color: -moz-use-text-color -moz-use-text-color rgb(39, 174, 96) !important;
-    -moz-border-top-colors: none !important;
-    -moz-border-right-colors: none !important;
-    -moz-border-bottom-colors: none !important;
-    -moz-border-left-colors: none !important;
-    border-image: none !important;
-    background: transparent none repeat scroll 0% 0% !important;
-     width: 80%;
-}
-
-#inserimento-cv .field select, #ricerca-cv .field select{
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background: url('../images/icona_down.png') no-repeat center right !important;
-    width: 80%;
-}
-
-#inserimento-cv .no-result{
-    padding-top:10px;
-}
-
-#inserimento-cv input[type=submit], #ricerca-cv input[type=submit]{
-    background: #27AE60;
+.invia-cv input, .invia-cv select{
+    width:100%;
+    height: 35px;
+    font-family: 'Oswald';
+    color:#000;
+    margin-bottom: 8px;
+    font-size:15px;
     text-transform: uppercase;
-    font-size:20px;
+    border: none;
+    padding: 2px;
+    padding-right: 25px;
 }
 
-
-#inserimento-cv .field label, #ricerca-cv .field label{
-    display:block;
-    font-weight: bold;
+.invia-cv label, .title {
+    font-size:15px;
+    font-family:'Oswald';
+    text-transform: uppercase;
+    font-weight: normal;
 }
 
-#inserimento-cv .field input[type=text], #inserimento-cv .field input[type=email]{
-    border-bottom:1px solid  #27AE60;
-    background: transparent;
-   
+.invia-cv .title {
+    margin-bottom:5px;
 }
 
-#inserimento-cv .submit-button, #ricerca-cv .submit-button{
+.invia-cv select {
+    -webkit-appearance:none;
+    -moz-appearance: none;
+    background: #fff url('images/mobile/hamburger-menu.png') no-repeat right center;
+    background-size: 25px 30px;    
+}
+
+.image-curriculum{
+    width:59px;
+    height: 55px;
+    background: url('images/invio-cv-icona.png') no-repeat center center;
+    margin:auto;
+    margin-bottom:10px;
+}
+
+.field.invia-curriculum{
+    text-align: center;
     margin-top:25px;
-    float:right;
+    margin-bottom:15px;
 }
 
-#inserimento-cv .title {
-    margin-top:10px;
-    font-weight: bold;
+.field.invia-curriculum input{
+   width:300px;
+   height: auto;
+   margin:auto;   
+   text-overflow: ellipsis;
 }
 
-#inserimento-cv .add-ruolo{
-    padding-top: 20px;
+
+.label-upload input[type="file"] {
+    display:none;
 }
+
+/***** Example custom styling *****/
+.label-upload {
+    border: none;    
+    padding: 2px 5px;    
+    background: #067a36;
+    display: block;
+    max-width:150px;
+    font-family: 'Oswald';
+    color:#fff;
+    height: 35px;
+    margin:auto;
+    cursor: pointer;
+}
+
+.label-upload span{
+    color:#fff;
+    line-height: 32px;
+}
+.label-upload:hover {
+    background: #CCC;
+}
+.label-upload:hover span{
+    color:#067a36;
+}
+
+.label-upload:active {
+    background: #CCF;
+}
+
+.privacy-field {
+    font-family: 'Oswald';
+    text-transform: uppercase;
+    font-size:12px;
+    margin-bottom:15px;
+    color:#000;
+}
+
+.privacy-field a {
+    color:#067a36;
+    text-decoration: none;
+}
+
+.privacy-field input {
+    width:auto;
+    float: left;
+    margin-right: 10px;    
+    height: auto;
+}
+
+.submit-button{
+    padding-top:25px;
+}
+
+.submit-button input, .submit-button input:hover  {
+    font-size: 15px;
+    color: #0B3A08;
+    text-decoration: none;
+    display: block;
+    width: 210px;
+    height: 55px;
+    line-height: 40px;
+    border: 3px solid #7CD7A1;
+    border-radius: 30px;
+    margin: auto;
+    background:transparent;
+    font-family: 'Oswald';
+    padding:0;
+}
+
 
 .table-cvs {
     border:1px solid #999;
@@ -105,12 +160,20 @@ and open the template in the editor.
     text-align: center;
     padding:20px;
     border:4px solid rgb(39, 174, 96);
+    font-family: 'Oswald';
+    text-transform: uppercase;
+    color: rgb(0, 0, 0);
+    font-size: 15px;
 }
 
 .ko {
-     text-align: center;
+    text-align: center;
     padding:20px;
     border:4px solid #f00;
+    font-family: 'Oswald';
+    text-transform: uppercase;
+    color: rgb(0, 0, 0);
+    font-size: 15px;
 }
 
 #risultati-cv {margin-top:30px;}
@@ -119,3 +182,158 @@ and open the template in the editor.
 .pre-form h2, .pre-form h4, h3.green, h2.green, .post-form h2, #ricerca-cv label, #inserimento-cv label, #inserimento-cv .title, .table-cvs thead td {color: rgb(47, 103, 42)}
 
 .logo-image {max-height: 52px}
+
+.container-pre-form {
+    width:100%;
+    background: #f2f2f2;
+}
+
+.pre-form{
+    padding-top:45px;
+    padding-bottom: 45px;
+}
+
+.pre-form h2 {
+    font-family: 'Oswald';
+    font-size:25px;
+    color:#000;
+    text-transform: uppercase;
+}
+
+.pre-form p {
+    font-family: 'Open Sans';
+    font-size:20px;
+    line-height: 25px;
+    color: #000;
+}
+
+.container-title{
+    width:100%;
+    background:#109f49;   
+}
+.container-title h2 {
+     color:#fff;
+     font-family: 'Oswald';
+     font-size:25px;
+     text-transform: uppercase;
+     margin:0;
+     text-align: center;
+     padding-top:15px;
+     padding-bottom:15px;
+}
+
+.container-post-form{
+    width:100%;
+    background:#f2f2f2;
+    padding-top:40px;
+    padding-bottom: 50px;
+    font-family: 'Open Sans';
+    color: #000;
+}
+
+.post-form p.link {
+    float:left;
+    margin-right: 20px;    
+    font-size:15px;
+    font-weight: 400;
+     color:#000;
+}
+
+.post-form p {
+    color:#000;
+}
+
+.post-form .button-link{
+    max-width:120px;
+    max-height:30px;
+    background:#067a36;
+    color:#fff;
+    line-height: 30px;
+    display: block;
+    text-align: center;
+    
+    margin:auto;
+}
+
+.post-form .description-cv{
+    font-size:20px;
+     color:#000;
+}
+
+.post-form .description-cv ul {
+    list-style: inherit;
+     color:#000;
+     margin-bottom: 10px;
+}
+
+.post-form .description-cv ul li {
+    margin-left:25px;
+    color:#000;
+}
+
+/** TABLET **/
+@media (min-width: 768px) {
+    .invia-cv select{       
+        background: #fff url('images/select-arrow.png') no-repeat 98% center;
+        background-size:12px 5px;        
+    }
+    
+    .privacy-field {
+        padding-top: 55px;    
+    }
+    
+    .post-form .img-componi-curriculum {
+        width:472px;
+        height: 153px;
+        float:left;
+        background:url('images/info-cv.png') center center no-repeat;
+        background-size: contain;
+        margin-left:80px;
+    }
+    
+    .post-form .description-cv{
+        padding-top:55px;
+    }
+    
+    .post-form p.link{
+        margin-left:-320px;
+    }
+    
+    .post-form p.link, .post-form .button-link {
+        margin-top: 100px;
+    }
+    
+    .image-curriculum {
+        float: left;
+        margin-right: 25px;
+    }
+    
+    .field.invia-curriculum {
+        text-align: left;
+    }
+    
+    .field.invia-curriculum input {
+        margin:0;
+        width:390px;
+    }
+}
+
+/** RETINA  **/
+@media  (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) { 
+    .invia-cv select{       
+        background: #fff url('images/retina-select-arrow.png') no-repeat 98% center;
+        background-size:12px 5px;        
+    } 
+    
+    .image-curriculum{       
+        background: url('images/retina-invio-cv-icona.png') no-repeat center center;
+        background-size:contain;
+    }
+    
+    .post-form .img-componi-curriculum {        
+        background:url('images/retina-info-cv.png') center center no-repeat;
+        background-size: contain;
+       
+    }
+}
+

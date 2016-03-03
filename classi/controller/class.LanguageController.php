@@ -65,6 +65,7 @@ function getLanIT(){
   $lan['add-role'] = 'Aggiungi il tuo ruolo';
   $lan['occupation'] = 'Dove stai cercando occupazione?';
   $lan['upload-cv'] = 'Carica il tuo Curriculum';
+  $lan['upload-button'] = 'Scegli il file';
   $lan['accept-privacy'] = 'Accetto la <a target="_blank" href="http://www.theworknote.com/privacy/">normativa sulla privacy</a>';
   $lan['region'] = 'Regione';
   $lan['province'] = "Provincia";
@@ -127,6 +128,7 @@ function getLanEN(){
   $lan['add-role'] = 'Add your role';
   $lan['occupation'] = 'Where are you looking for employment?';
   $lan['upload-cv'] = 'Upload your Curriculum';
+  $lan['upload-button'] = 'Upload';
   $lan['accept-privacy'] = 'I accept <a target="_blank" href="http://www.theworknote.com/privacy/">the Privacy Policy</a>';
   $lan['region'] = 'Region';
   $lan['province'] = "Province";
