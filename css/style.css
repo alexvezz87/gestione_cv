@@ -25,7 +25,7 @@ and open the template in the editor.
     font-size:15px;
     text-transform: uppercase;
     border: none;
-    padding: 2px;
+    padding: 5px;
     padding-right: 25px;
 }
 
@@ -153,8 +153,18 @@ and open the template in the editor.
 
 .table-cvs thead{ font-weight: bold;}
 .table-cvs thead tr {background:#ddd}
-.table-cvs thead tr td{border:1px solid #999}
-.table-cvs tr td{padding:10px; border:1px solid #ddd}
+.table-cvs thead tr td{
+    border:1px solid #999; 
+    font-family: 'Oswald'; 
+    text-transform: uppercase;
+    font-weight: normal;        
+}
+.table-cvs tr td{
+    padding:10px; 
+    border:1px solid #ddd;
+    font-family: 'Open Sans';
+    color:#000;
+}
 
 .ok {
     text-align: center;
@@ -179,7 +189,10 @@ and open the template in the editor.
 #risultati-cv {margin-top:30px;}
 
 .pre-form p, .post-form p, .post-form ul {color:#555}
-.pre-form h2, .pre-form h4, h3.green, h2.green, .post-form h2, #ricerca-cv label, #inserimento-cv label, #inserimento-cv .title, .table-cvs thead td {color: rgb(47, 103, 42)}
+.pre-form h2, .pre-form h4, h3.green, h2.green, .post-form h2, #ricerca-cv label, #inserimento-cv label, #inserimento-cv .title, .table-cvs thead td {
+    color: rgb(47, 103, 42)
+        
+}
 
 .logo-image {max-height: 52px}
 
@@ -198,6 +211,13 @@ and open the template in the editor.
     font-size:25px;
     color:#000;
     text-transform: uppercase;
+}
+
+.pre-form h4 {
+    font-family: 'Open Sans';
+    color:#000;
+    font-size:20px;
+    font-weight: bold;
 }
 
 .pre-form p {
@@ -271,6 +291,92 @@ and open the template in the editor.
     color:#000;
 }
 
+.container-search{
+    background:#e2e2e2;
+    padding-top:25px;
+    padding-bottom:25px;
+}
+
+.container-search h3.green{
+    text-align: center;
+    font-family: 'Oswald';
+    text-transform: uppercase;
+    color: #0a3907;
+    font-size:22px;
+}
+
+.container-search input[name=ricerca-cv], .container-search input[name=ricerca-cv]:hover{
+    width:auto;
+    background: transparent;
+    color:#0a3907;
+    border:2px solid #7bd6a0;
+    border-radius: 30px;
+    margin:auto;
+    padding-left:20px;
+    padding-right: 20px;
+    display: block;
+    margin-top:30px;
+    font-size:15px;
+}
+
+.main-container.scopri-cv{
+    background:#f2f2f2;
+}
+
+.container-results {
+    padding-top:40px;
+    padding-bottom:40px;
+}
+
+.container-results .found-cv{
+    text-align: center;
+    font-family: 'Oswald';
+    font-size:16px;
+    color:#000;
+    text-transform: uppercase;
+}
+
+
+.single-curriculum{
+    background: #e2e2e2;
+    margin-bottom:10px;
+    padding:15px;    
+    text-align: left;
+    font-size:16px;
+    font-family:'Open Sans';
+    margin-bottom:5px;
+    color:#000;
+}
+
+.single-curriculum a, .single-curriculum a:hover {
+    text-decoration: none;
+    color:black;
+}
+
+.single-curriculum span{
+    display:block;
+    font-family: 'Oswald';
+    color:rgb(47, 103, 42);
+    text-transform: uppercase;
+}
+
+.url-cv{
+    text-align: center;
+}
+
+.url-cv a, .url-cv a:hover{
+    display: block;
+    margin:auto;
+    font-family: 'Oswald';
+    text-transform: uppercase;
+    color: #0a3907;
+    padding:10px;
+    border:2px solid #7bd6a0;
+    text-decoration: none;
+    width:150px;
+    border-radius: 30px;
+}
+
 /** TABLET **/
 @media (min-width: 768px) {
     .invia-cv select{       
@@ -315,6 +421,10 @@ and open the template in the editor.
     .field.invia-curriculum input {
         margin:0;
         width:390px;
+    }
+    
+    .invia-cv .container-search .col-sm-6{
+        width:33.33333333%;
     }
 }
 

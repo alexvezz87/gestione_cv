@@ -617,7 +617,10 @@ class WriterCV {
     public function printUserCVs($cvs){
         if(count($cvs) > 0){
 ?>
-        Curriculum presenti: <?php echo count($cvs); ?>
+        
+        <p class="found-cv col-xs-12">Curriculum presenti: <?php echo count($cvs); ?></p>
+        
+        <div class="hidden-xs">
         <table class="table-cvs">
             <thead>
                 <tr>                    
@@ -670,6 +673,50 @@ class WriterCV {
 ?>
             </tbody>
         </table>
+        </div>
+        
+        <div class="visible-xs col-xs-12">
+<?php
+        foreach($cvs as $cv){
+            $regione = $this->locatorController->getRegioneById($cv->regione);
+            $provincia = $this->locatorController->getProvinciaById($cv->provincia);
+
+            $temp_ruolo = $this->ruoloController->getRuoloById($cv->ruolo);
+            $nomeRuolo = "";
+            if($temp_ruolo != null){
+               $nomeRuolo .= getNome($temp_ruolo);
+            }
+            else{
+                $nomeRuolo .= 'non indicato';
+            }
+
+            $location = "";
+            if($regione != null){
+                $location.= $regione->regione;
+                if($provincia != null){
+                    $location.= ' - '.$provincia->provincia;
+                }
+            }
+            else{
+                $location.="ovunque";
+            }
+?>
+            <div class="col-xs-12 single-curriculum">
+                <p class="col-xs-12"><span>Nome</span> <?php echo $cv->cognome ?> <?php echo $cv->nome ?></p>
+                <p class="col-xs-12"><span>Mail</span> <a href="mailto:<?php /* email */ echo $cv->email ?>"><?php /* email */ echo $cv->email ?></a></p>
+               
+                <p class="col-xs-12"><span>Ruolo</span> <?php /* nome ruolo */ echo $nomeRuolo ?></p>
+                <p class="col-xs-12"><span>Dove</span> <?php /* nome regione e provincia */ echo $location ?></p>
+                
+                <p class="url-cv col-xs-12"><a target="_blank" href="<?php echo get_home_url().'/'.$cv->cv ?>">Visualizza il CV</a></p>
+                <div class="clear"></div>
+            </div>
+<?php
+        }
+?>
+            <div class="clear"></div>
+        </div>
+        <div class="clear"></div>
 <?php
         }
         else{
@@ -985,7 +1032,14 @@ class WriterCV {
             }
             else{
                 $param['ordine'] = 'provincia, ruolo, id';
-                $this->printUserCVs($this->cvController->getCVsByParameters($param));
+            ?>    
+                <div class="container-results">
+                        <div class="container-1024">
+                            <?php $this->printUserCVs($this->cvController->getCVsByParameters($param)); ?>
+                        </div>
+                    </div>
+            <?php
+                
             }
             
         }
@@ -993,15 +1047,17 @@ class WriterCV {
     
     public function printUserSearchBox($categoria){
     ?>
-        <h3 class="green"><?php echo $this->languageController->getTranslation('search') ?></h3>
+        <div class="container-search">
+        <div class="container-1024">
+        <h3 class="green col-xs-12"><?php echo $this->languageController->getTranslation('search') ?></h3>
         <div id="ricerca-cv">
            
             <form name="form-ricerca-cv" action="<?php echo curPageURL() ?>#risultati-cv" method="POST">                
                
                 <?php echo $this->printRegioniProvince('') ?>        
                 
-                                
-                    <div id="contenitore-selettore-ruoli" class="field">
+                     
+                    <div id="contenitore-selettore-ruoli" class="field col-xs-12 col-sm-6">
                         <input type="hidden" name="ricerca-categoria" value="<?php echo $categoria ?>" />
                         <label for="ruolo"><?php echo $this->languageController->getTranslation('role') ?></label>
                         <select id="ruolo" name="ruolo">
@@ -1025,8 +1081,8 @@ class WriterCV {
                           
                 <div class="clear"></div>
                 <div class="ricerca field">
-                    <input type="submit" value="Ricerca" name="ricerca-cv" style="float:left; margin-right: 15px" />
-                    <img src="<?php echo plugins_url() ?>/gestione_cv/images/logo-transparent.png" class="logo-image" style="max-height: 52px;" />
+                    <input type="submit" value="<?php echo $this->languageController->getTranslation('search') ?>" name="ricerca-cv" />
+                    <!--<img src="<?php echo plugins_url() ?>/gestione_cv/images/logo-transparent.png" class="logo-image" style="max-height: 52px;" />-->
                 </div>
                 <div class="clear"></div>
             </form>
@@ -1034,7 +1090,8 @@ class WriterCV {
             <?php echo $this->printAjaxCallRegioniProvince() ?>           
 
         </div>
-
+        </div>
+            </div>
         <div id="risultati-cv">
            <?php echo $this->listenerSearchCV('user') ?> 
         </div>

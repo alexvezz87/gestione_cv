@@ -48,17 +48,21 @@ if($user_ID != 0){
            //location['cod_provincia'] --> PROVINCIA
 
 ?>
-            <div class="pre-form">
-                <h2><?php echo $languageController->getTranslation('find-cv-title')  ?></h2>
-                <p><?php echo $languageController->getTranslation('find-cv-text') ?></p>
-                <h4><?php echo $languageController->getTranslation('how-it-works-title') ?></h4>
-                <p><?php echo $languageController->getTranslation('how-it-works-text') ?></p>
-                
+            <div class="container-1024">
+                <div class="pre-form col-xs-12">
+                    <h2><?php echo $languageController->getTranslation('find-cv-title')  ?></h2>
+                    <p><?php echo $languageController->getTranslation('find-cv-text') ?></p>
+                    <h4><?php echo $languageController->getTranslation('how-it-works-title') ?></h4>
+                    <p><?php echo $languageController->getTranslation('how-it-works-text') ?></p>
+
+                </div>
             </div>
-<?php
-            $printer->printUserSearchBox($categoria);
-           
-           
+            <div class="clear"></div>
+            
+            
+                    <?php $printer->printUserSearchBox($categoria); ?>
+                
+<?php           
             if(!isset($_POST['ricerca-cv'])){
            
                 //I parametri indispensabili sono quelli ottenuti
@@ -90,10 +94,17 @@ if($user_ID != 0){
                 $param_3['ordine'] = 'ruolo';
                 $result_3 = $cvController->getCVsByParameters($param_3);           
 
+                
                 $result = array_unique(array_merge($result_1, $result_2, $result_3), SORT_REGULAR);
 
                 if(count($result > 0)){
-                    $printer->printUserCVs($result);
+                ?>
+                    <div class="container-results">
+                        <div class="container-1024">
+                            <?php $printer->printUserCVs($result); ?>
+                        </div>
+                    </div>
+                <?php    
                 }
                 else{
                     echo $languageController->getTranslation('no-curriculum-to-show');

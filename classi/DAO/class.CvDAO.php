@@ -150,23 +150,27 @@ class CvDAO {
              * $parameters['ordine']                         
              */
             
-            $query = "SELECT * FROM ".$this->table." WHERE 1=1";
+            $query = "SELECT * FROM ".$this->table." WHERE 1=1";            
             //categoria 
             if( isset($parameters['categoria']) && ($parameters['categoria'] != null && $parameters['categoria']!= '')){
                 $query.=" AND categoria = ".$parameters['categoria'];            }
-            
-            //ruolo
-            if( isset($parameters['ruolo']) && ($parameters['ruolo'] != null && $parameters['ruolo']!= '')){
-                $query.=" AND ruolo = ".$parameters['ruolo'];
-            }
+                        
             //regione
              if( isset($parameters['regione']) && ($parameters['regione'] != null && $parameters['regione']!= '')){
-                $query.=" AND regione = '".$parameters['regione']."'";
+                //chi non seleziona la regione, può comparire in qualsiasi regione
+                $query.=" AND (regione = '".$parameters['regione']."' OR regione = '' )";                
             }
             //provincia
              if( isset($parameters['provincia']) && ($parameters['provincia'] != null && $parameters['provincia']!= '')){
-                $query.=" AND provincia = '".$parameters['provincia']."'";
+                //chi non seleziona la provincia, può comparire in qualsiasi provincia
+                $query.=" AND (provincia = '".$parameters['provincia']."' OR provincia = '')";                
             }
+            
+            //ruolo
+            if( isset($parameters['ruolo']) && ($parameters['ruolo'] != null && $parameters['ruolo']!= '')){                
+                $query.=" AND (ruolo = ".$parameters['ruolo']." OR ruolo = '')";                
+            }
+            
             //nome
              if( isset($parameters['nome']) && ($parameters['nome'] != null && $parameters['nome']!= '')){
                 $query.=" AND nome = '".$parameters['nome']."'";
@@ -184,11 +188,10 @@ class CvDAO {
                 $query.=" AND pubblicato = ".$parameters['pubblicato']."";
             }
             //ordine
-            if( isset($parameters['ordine']) && ($parameters['ordine'] != null && $parameters['ordine']!= '')){
-                $query.=" ORDER BY ".$parameters['ordine']." DESC";
-            }
+//           
+            $query.=" ORDER BY (regione <> '') AND (provincia <> '') AND (ruolo <> 0) DESC";
             
-            
+                        
             return $this->wpdb->get_results($query);
              
         } catch (Exception $ex) {
